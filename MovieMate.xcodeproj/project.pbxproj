@@ -1,0 +1,485 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05AE7C3414AD610E00E04FDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AE7C3314AD610E00E04FDF /* UIKit.framework */; };
+		05AE7C3614AD610E00E04FDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AE7C3514AD610E00E04FDF /* Foundation.framework */; };
+		05AE7C3814AD610E00E04FDF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AE7C3714AD610E00E04FDF /* CoreGraphics.framework */; };
+		05AE7C3A14AD610E00E04FDF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AE7C3914AD610E00E04FDF /* CoreData.framework */; };
+		05AE7C4014AD610E00E04FDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 05AE7C3E14AD610E00E04FDF /* InfoPlist.strings */; };
+		05AE7C4214AD610E00E04FDF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 05AE7C4114AD610E00E04FDF /* main.m */; };
+		05AE7C4614AD610E00E04FDF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 05AE7C4514AD610E00E04FDF /* AppDelegate.m */; };
+		05AE7C4914AD610E00E04FDF /* MovieMate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 05AE7C4714AD610E00E04FDF /* MovieMate.xcdatamodeld */; };
+		05AE7C4C14AD610E00E04FDF /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05AE7C4B14AD610E00E04FDF /* MasterViewController.m */; };
+		05AE7C4F14AD610E00E04FDF /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 05AE7C4E14AD610E00E04FDF /* DetailViewController.m */; };
+		05AE7C5214AD610E00E04FDF /* MasterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05AE7C5014AD610E00E04FDF /* MasterViewController.xib */; };
+		05AE7C5514AD610E00E04FDF /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 05AE7C5314AD610E00E04FDF /* DetailViewController.xib */; };
+		05AE7C5D14AD610E00E04FDF /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AE7C5C14AD610E00E04FDF /* SenTestingKit.framework */; };
+		05AE7C5E14AD610E00E04FDF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AE7C3314AD610E00E04FDF /* UIKit.framework */; };
+		05AE7C5F14AD610E00E04FDF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AE7C3514AD610E00E04FDF /* Foundation.framework */; };
+		05AE7C6014AD610E00E04FDF /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AE7C3914AD610E00E04FDF /* CoreData.framework */; };
+		05AE7C6814AD610E00E04FDF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 05AE7C6614AD610E00E04FDF /* InfoPlist.strings */; };
+		05AE7C6B14AD610E00E04FDF /* MovieMateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 05AE7C6A14AD610E00E04FDF /* MovieMateTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		05AE7C6114AD610E00E04FDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 05AE7C2614AD610D00E04FDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05AE7C2E14AD610E00E04FDF;
+			remoteInfo = MovieMate;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		05AE7C2F14AD610E00E04FDF /* MovieMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		05AE7C3314AD610E00E04FDF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		05AE7C3514AD610E00E04FDF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		05AE7C3714AD610E00E04FDF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		05AE7C3914AD610E00E04FDF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		05AE7C3D14AD610E00E04FDF /* MovieMate-Info.plist */ = {isa = PBXFileReference; path = "MovieMate-Info.plist"; sourceTree = "<group>"; };
+		05AE7C3F14AD610E00E04FDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		05AE7C4114AD610E00E04FDF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		05AE7C4314AD610E00E04FDF /* MovieMate-Prefix.pch */ = {isa = PBXFileReference; path = "MovieMate-Prefix.pch"; sourceTree = "<group>"; };
+		05AE7C4414AD610E00E04FDF /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		05AE7C4514AD610E00E04FDF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		05AE7C4814AD610E00E04FDF /* MovieMate.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MovieMate.xcdatamodel; sourceTree = "<group>"; };
+		05AE7C4A14AD610E00E04FDF /* MasterViewController.h */ = {isa = PBXFileReference; path = MasterViewController.h; sourceTree = "<group>"; };
+		05AE7C4B14AD610E00E04FDF /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
+		05AE7C4D14AD610E00E04FDF /* DetailViewController.h */ = {isa = PBXFileReference; path = DetailViewController.h; sourceTree = "<group>"; };
+		05AE7C4E14AD610E00E04FDF /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		05AE7C5114AD610E00E04FDF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
+		05AE7C5414AD610E00E04FDF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DetailViewController.xib; sourceTree = "<group>"; };
+		05AE7C5B14AD610E00E04FDF /* MovieMateTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieMateTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		05AE7C5C14AD610E00E04FDF /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		05AE7C6514AD610E00E04FDF /* MovieMateTests-Info.plist */ = {isa = PBXFileReference; path = "MovieMateTests-Info.plist"; sourceTree = "<group>"; };
+		05AE7C6714AD610E00E04FDF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		05AE7C6914AD610E00E04FDF /* MovieMateTests.h */ = {isa = PBXFileReference; path = MovieMateTests.h; sourceTree = "<group>"; };
+		05AE7C6A14AD610E00E04FDF /* MovieMateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MovieMateTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		05AE7C2C14AD610E00E04FDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AE7C3414AD610E00E04FDF /* UIKit.framework in Frameworks */,
+				05AE7C3614AD610E00E04FDF /* Foundation.framework in Frameworks */,
+				05AE7C3814AD610E00E04FDF /* CoreGraphics.framework in Frameworks */,
+				05AE7C3A14AD610E00E04FDF /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05AE7C5714AD610E00E04FDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AE7C5D14AD610E00E04FDF /* SenTestingKit.framework in Frameworks */,
+				05AE7C5E14AD610E00E04FDF /* UIKit.framework in Frameworks */,
+				05AE7C5F14AD610E00E04FDF /* Foundation.framework in Frameworks */,
+				05AE7C6014AD610E00E04FDF /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		05AE7C2414AD610D00E04FDF = {
+			isa = PBXGroup;
+			children = (
+				05AE7C3B14AD610E00E04FDF /* MovieMate */,
+				05AE7C6314AD610E00E04FDF /* MovieMateTests */,
+				05AE7C3214AD610E00E04FDF /* Frameworks */,
+				05AE7C3014AD610E00E04FDF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		05AE7C3014AD610E00E04FDF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				05AE7C2F14AD610E00E04FDF /* MovieMate.app */,
+				05AE7C5B14AD610E00E04FDF /* MovieMateTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		05AE7C3214AD610E00E04FDF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				05AE7C3314AD610E00E04FDF /* UIKit.framework */,
+				05AE7C3514AD610E00E04FDF /* Foundation.framework */,
+				05AE7C3714AD610E00E04FDF /* CoreGraphics.framework */,
+				05AE7C3914AD610E00E04FDF /* CoreData.framework */,
+				05AE7C5C14AD610E00E04FDF /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		05AE7C3B14AD610E00E04FDF /* MovieMate */ = {
+			isa = PBXGroup;
+			children = (
+				05AE7C4414AD610E00E04FDF /* AppDelegate.h */,
+				05AE7C4514AD610E00E04FDF /* AppDelegate.m */,
+				05AE7C4A14AD610E00E04FDF /* MasterViewController.h */,
+				05AE7C4B14AD610E00E04FDF /* MasterViewController.m */,
+				05AE7C4D14AD610E00E04FDF /* DetailViewController.h */,
+				05AE7C4E14AD610E00E04FDF /* DetailViewController.m */,
+				05AE7C5014AD610E00E04FDF /* MasterViewController.xib */,
+				05AE7C5314AD610E00E04FDF /* DetailViewController.xib */,
+				05AE7C4714AD610E00E04FDF /* MovieMate.xcdatamodeld */,
+				05AE7C3C14AD610E00E04FDF /* Supporting Files */,
+			);
+			path = MovieMate;
+			sourceTree = "<group>";
+		};
+		05AE7C3C14AD610E00E04FDF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				05AE7C3D14AD610E00E04FDF /* MovieMate-Info.plist */,
+				05AE7C3E14AD610E00E04FDF /* InfoPlist.strings */,
+				05AE7C4114AD610E00E04FDF /* main.m */,
+				05AE7C4314AD610E00E04FDF /* MovieMate-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		05AE7C6314AD610E00E04FDF /* MovieMateTests */ = {
+			isa = PBXGroup;
+			children = (
+				05AE7C6914AD610E00E04FDF /* MovieMateTests.h */,
+				05AE7C6A14AD610E00E04FDF /* MovieMateTests.m */,
+				05AE7C6414AD610E00E04FDF /* Supporting Files */,
+			);
+			path = MovieMateTests;
+			sourceTree = "<group>";
+		};
+		05AE7C6414AD610E00E04FDF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				05AE7C6514AD610E00E04FDF /* MovieMateTests-Info.plist */,
+				05AE7C6614AD610E00E04FDF /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		05AE7C2E14AD610E00E04FDF /* MovieMate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05AE7C6E14AD610E00E04FDF /* Build configuration list for PBXNativeTarget "MovieMate" */;
+			buildPhases = (
+				05AE7C2B14AD610E00E04FDF /* Sources */,
+				05AE7C2C14AD610E00E04FDF /* Frameworks */,
+				05AE7C2D14AD610E00E04FDF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MovieMate;
+			productName = MovieMate;
+			productReference = 05AE7C2F14AD610E00E04FDF /* MovieMate.app */;
+			productType = "com.apple.product-type.application";
+		};
+		05AE7C5A14AD610E00E04FDF /* MovieMateTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05AE7C7114AD610E00E04FDF /* Build configuration list for PBXNativeTarget "MovieMateTests" */;
+			buildPhases = (
+				05AE7C5614AD610E00E04FDF /* Sources */,
+				05AE7C5714AD610E00E04FDF /* Frameworks */,
+				05AE7C5814AD610E00E04FDF /* Resources */,
+				05AE7C5914AD610E00E04FDF /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				05AE7C6214AD610E00E04FDF /* PBXTargetDependency */,
+			);
+			name = MovieMateTests;
+			productName = MovieMateTests;
+			productReference = 05AE7C5B14AD610E00E04FDF /* MovieMateTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		05AE7C2614AD610D00E04FDF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 05AE7C2914AD610D00E04FDF /* Build configuration list for PBXProject "MovieMate" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 05AE7C2414AD610D00E04FDF;
+			productRefGroup = 05AE7C3014AD610E00E04FDF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				05AE7C2E14AD610E00E04FDF /* MovieMate */,
+				05AE7C5A14AD610E00E04FDF /* MovieMateTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		05AE7C2D14AD610E00E04FDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AE7C4014AD610E00E04FDF /* InfoPlist.strings in Resources */,
+				05AE7C5214AD610E00E04FDF /* MasterViewController.xib in Resources */,
+				05AE7C5514AD610E00E04FDF /* DetailViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05AE7C5814AD610E00E04FDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AE7C6814AD610E00E04FDF /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		05AE7C5914AD610E00E04FDF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		05AE7C2B14AD610E00E04FDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AE7C4214AD610E00E04FDF /* main.m in Sources */,
+				05AE7C4614AD610E00E04FDF /* AppDelegate.m in Sources */,
+				05AE7C4914AD610E00E04FDF /* MovieMate.xcdatamodeld in Sources */,
+				05AE7C4C14AD610E00E04FDF /* MasterViewController.m in Sources */,
+				05AE7C4F14AD610E00E04FDF /* DetailViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05AE7C5614AD610E00E04FDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05AE7C6B14AD610E00E04FDF /* MovieMateTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		05AE7C6214AD610E00E04FDF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05AE7C2E14AD610E00E04FDF /* MovieMate */;
+			targetProxy = 05AE7C6114AD610E00E04FDF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		05AE7C3E14AD610E00E04FDF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05AE7C3F14AD610E00E04FDF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		05AE7C5014AD610E00E04FDF /* MasterViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05AE7C5114AD610E00E04FDF /* en */,
+			);
+			name = MasterViewController.xib;
+			sourceTree = "<group>";
+		};
+		05AE7C5314AD610E00E04FDF /* DetailViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05AE7C5414AD610E00E04FDF /* en */,
+			);
+			name = DetailViewController.xib;
+			sourceTree = "<group>";
+		};
+		05AE7C6614AD610E00E04FDF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				05AE7C6714AD610E00E04FDF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		05AE7C6C14AD610E00E04FDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		05AE7C6D14AD610E00E04FDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		05AE7C6F14AD610E00E04FDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MovieMate/MovieMate-Prefix.pch";
+				INFOPLIST_FILE = "MovieMate/MovieMate-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		05AE7C7014AD610E00E04FDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MovieMate/MovieMate-Prefix.pch";
+				INFOPLIST_FILE = "MovieMate/MovieMate-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		05AE7C7214AD610E00E04FDF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MovieMate.app/MovieMate";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MovieMate/MovieMate-Prefix.pch";
+				INFOPLIST_FILE = "MovieMateTests/MovieMateTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		05AE7C7314AD610E00E04FDF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MovieMate.app/MovieMate";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MovieMate/MovieMate-Prefix.pch";
+				INFOPLIST_FILE = "MovieMateTests/MovieMateTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		05AE7C2914AD610D00E04FDF /* Build configuration list for PBXProject "MovieMate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05AE7C6C14AD610E00E04FDF /* Debug */,
+				05AE7C6D14AD610E00E04FDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		05AE7C6E14AD610E00E04FDF /* Build configuration list for PBXNativeTarget "MovieMate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05AE7C6F14AD610E00E04FDF /* Debug */,
+				05AE7C7014AD610E00E04FDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05AE7C7114AD610E00E04FDF /* Build configuration list for PBXNativeTarget "MovieMateTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05AE7C7214AD610E00E04FDF /* Debug */,
+				05AE7C7314AD610E00E04FDF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		05AE7C4714AD610E00E04FDF /* MovieMate.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				05AE7C4814AD610E00E04FDF /* MovieMate.xcdatamodel */,
+			);
+			currentVersion = 05AE7C4814AD610E00E04FDF /* MovieMate.xcdatamodel */;
+			path = MovieMate.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 05AE7C2614AD610D00E04FDF /* Project object */;
+}

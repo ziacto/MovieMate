@@ -46,6 +46,7 @@
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
     self.navigationItem.rightBarButtonItem = addButton;
+    [self.tableView setRowHeight:ROW_HEIGHT];
 }
 
 - (void)viewDidUnload
@@ -93,15 +94,61 @@
     return [sectionInfo numberOfObjects];
 }
 
+//Highlight the alternating rows
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UILabel* titleLabel = (UILabel *)[cell.contentView viewWithTag:TITLELABEL_TAG];
+    
+    if (indexPath.row % 2)
+    {
+        [cell setBackgroundColor:UIColorFromRGB(0xF2F2F2)];
+        titleLabel.backgroundColor = UIColorFromRGB(0xF2F2F2);
+    }
+    else 
+    {
+        [cell setBackgroundColor:[UIColor clearColor]];
+        titleLabel.backgroundColor = [UIColor clearColor];
+    }
+}
+
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
+    UILabel *titleLabel;
+    UIImageView *poster, *rating;
+    UIProgressView *criticsScore;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.frame = CGRectMake(0, 0, ROW_WIDTH, ROW_HEIGHT);
+        
+        poster = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 61, 91)];
+        poster.tag = POSTER_TAG;
+        poster.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        [cell.contentView addSubview:poster];
+        
+        titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(TITLE_X, TITLE_Y, TITLE_WIDTH, TITLE_HEIGHT)];
+        titleLabel.tag = TITLELABEL_TAG;
+        titleLabel.font = [UIFont boldSystemFontOfSize:24.0];
+        titleLabel.minimumFontSize = 14.0;
+        titleLabel.adjustsFontSizeToFitWidth = YES;
+        titleLabel.textAlignment = UITextAlignmentLeft;
+        titleLabel.textColor = [UIColor blackColor];
+        titleLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        [cell.contentView addSubview:titleLabel];
+        
+        criticsScore = [[UIProgressView alloc] initWithFrame:CGRectMake(66, 50, 220, 15)];
+        criticsScore.tag = CRITICSSCORE_TAG;
+        criticsScore.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        [cell.contentView addSubview:criticsScore];
+        
+        rating = [[UIImageView alloc] initWithFrame:CGRectMake(RATING_X, RATING_Y, RATING_WIDTH_NC17_PG13, RATING_HEIGHT)];
+        rating.tag = RATING_TAG;
+        rating.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        [cell.contentView addSubview:rating];
     }
 
     [self configureCell:cell atIndexPath:indexPath];
@@ -260,8 +307,36 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    NSManagedObject *managedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[managedObject valueForKey:@"timeStamp"] description];
+    UIImageView* poster = (UIImageView *)[cell.contentView viewWithTag:POSTER_TAG];
+    UILabel* titleLabel = (UILabel *)[cell.contentView viewWithTag:TITLELABEL_TAG];
+    UIProgressView* criticsScore = (UIProgressView *)[cell.contentView viewWithTag:CRITICSSCORE_TAG];
+    UIImageView* rating = (UIImageView *)[cell.contentView viewWithTag:RATING_TAG];    
+    
+    NSString* string1 = @"T";
+    NSString* string2 = @"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
+    
+    if(indexPath.row %2 == 0)
+    {
+        titleLabel.text = string1;
+    }
+    else
+    {
+        titleLabel.text = string2;
+    }
+    
+    CGFloat actualSize = 24.0f;
+    CGSize stringSize = [titleLabel.text sizeWithFont:[UIFont boldSystemFontOfSize:24] minFontSize:14 actualFontSize:&actualSize forWidth:TITLE_WIDTH lineBreakMode:UILineBreakModeTailTruncation];
+    
+    [criticsScore setProgress:0.5f];
+    
+    //example if rating is equal to "G"
+    NSString *pathToRatingG = [[NSBundle mainBundle] pathForResource:@"g" ofType:@"png"];
+    UIImage* imageG = [[UIImage alloc] initWithContentsOfFile:pathToRatingG];
+    rating.frame = CGRectMake(TITLE_X + stringSize.width + TITLE_RATING_SPACER, RATING_Y, RATING_WIDTH_G, RATING_HEIGHT);
+    [rating setImage:imageG];
+    
+    UIImage *posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://content9.flixster.com/movie/11/16/11/11161107_mob.jpg"]]];
+    [poster setImage:posterImage];
 }
 
 - (void)insertNewObject

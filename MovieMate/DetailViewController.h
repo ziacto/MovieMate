@@ -7,11 +7,26 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Movie.h"
+#import "Actor.h"
+#import "Role.h"
+
+#define IMAGE_TAG 0
+#define SYNOPSISLABEL_TAG 1
+#define SYNOPSISTEXT_TAG 2
+#define CASTLABEL_TAG 3
+#define CASTTEXT_TAG 4
+#define DIVIDER_TAG 5
+#define SUMMARYLABEL_TAG 6
+#define SCROLLVIEW_TAG 7
+#define FAVORITE_TAG 8
+#define GOLDSTAR_TAG 9
 
 @interface DetailViewController : UIViewController
+{
+    Movie* movie;
+}
 
-@property (strong, nonatomic) id detailItem;
-
-@property (strong, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
+@property (strong, nonatomic) Movie* movie;
 
 @end

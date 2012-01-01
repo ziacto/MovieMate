@@ -7,35 +7,122 @@
 //
 
 #import "DetailViewController.h"
+#import "DatabaseManager.h"
 
 @interface DetailViewController ()
 - (void)configureView;
+- (void)buttonClicked:(id)sender;
 @end
 
 @implementation DetailViewController
 
-@synthesize detailItem = _detailItem;
-@synthesize detailDescriptionLabel = _detailDescriptionLabel;
+@synthesize movie;
 
 #pragma mark - Managing the detail item
 
-- (void)setDetailItem:(id)newDetailItem
+- (void)buttonClicked:(id)sender
 {
-    if (_detailItem != newDetailItem) {
-        _detailItem = newDetailItem;
+    NSLog(@"Got button press event");
+    
+    UIScrollView* scrollView = (UIScrollView *)[self.view viewWithTag:SCROLLVIEW_TAG];
+    UIImageView* starView = (UIImageView*)[scrollView viewWithTag:GOLDSTAR_TAG];
+    
+    NSManagedObjectContext *context = [[DatabaseManager sharedDatabaseManager] managedObjectContext];
+    if([movie.favorite boolValue] == NO)
+    {
+        movie.favorite = [NSNumber numberWithBool:true];
+        NSString *pathToStar = [[NSBundle mainBundle] pathForResource:@"goldstar" ofType:@"png"];
+        UIImage* starImage = [[UIImage alloc] initWithContentsOfFile:pathToStar];
+        [starView setImage:starImage];
+    }
+    else
+    {
+        movie.favorite = [NSNumber numberWithBool:false];
+        [starView setImage:nil];
+    }
+    
+    
+    // Save the context.
+    NSError *error = nil;
+    if (![context save:&error]) {
         
-        // Update the view.
-        [self configureView];
+        //Replace this implementation with code to handle the error appropriately.
+        
+        abort();// causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+        
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
     }
 }
 
 - (void)configureView
 {
-    // Update the user interface for the detail item.
-
-    if (self.detailItem) {
-        self.detailDescriptionLabel.text = [self.detailItem description];
-    }
+    
+    UIScrollView* scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    scrollView.tag = SCROLLVIEW_TAG;
+    [scrollView setContentSize:CGSizeMake(320, 570)];
+    [scrollView setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:scrollView];
+    
+    UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(70, 5, 180, 267)];
+    imageView.tag = IMAGE_TAG;
+    [scrollView addSubview:imageView];
+    
+    UIButton* favoriteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    favoriteButton.frame = CGRectMake(255, 5, 63, 44);
+    favoriteButton.tag = FAVORITE_TAG;
+    [favoriteButton setTitle:@"Favorite" forState:UIControlStateNormal];
+    [favoriteButton addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:favoriteButton];
+    
+    UIImageView* starView = [[UIImageView alloc] initWithFrame:CGRectMake(260, 50, 30, 30)];
+    starView.tag = GOLDSTAR_TAG;
+    [scrollView addSubview:starView];
+    
+    UILabel* synopsisLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 275, 250, 16)];
+    synopsisLabel.tag = SYNOPSISLABEL_TAG;
+    synopsisLabel.font = [UIFont boldSystemFontOfSize:14.0];
+    synopsisLabel.textAlignment = UITextAlignmentLeft;
+    synopsisLabel.textColor = [UIColor blackColor];
+    synopsisLabel.text = @"Synopsis";
+    [scrollView addSubview:synopsisLabel];
+    
+    UITextView* synopsisText = [[UITextView alloc] initWithFrame:CGRectMake(5, 290, 310, 100)];
+    synopsisText.tag = SYNOPSISTEXT_TAG;
+    synopsisText.font = [UIFont systemFontOfSize:10.0];
+    synopsisText.textAlignment = UITextAlignmentLeft;
+    synopsisText.textColor = [UIColor blackColor];
+    synopsisText.editable = NO;
+    [scrollView addSubview:synopsisText];
+    
+    UILabel* castLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 395, 250, 16)];
+    castLabel.tag = CASTLABEL_TAG;
+    castLabel.font = [UIFont boldSystemFontOfSize:14.0];
+    castLabel.textAlignment = UITextAlignmentLeft;
+    castLabel.textColor = [UIColor blackColor];
+    castLabel.text = @"Cast";
+    [scrollView addSubview:castLabel];
+    
+    UITextView* castText = [[UITextView alloc] initWithFrame:CGRectMake(5, 412, 310, 100)];
+    castText.tag = CASTTEXT_TAG;
+    castText.font = [UIFont systemFontOfSize:10.0];
+    castText.textAlignment = UITextAlignmentLeft;
+    castText.textColor = [UIColor blackColor];
+    castText.editable = NO;
+    [scrollView addSubview:castText];
+    
+    
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(5, 535, 305, 2)];
+    lineView.backgroundColor = [UIColor blackColor];
+    lineView.tag = DIVIDER_TAG;
+    [scrollView addSubview:lineView];
+    
+    UILabel* summaryLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 545, 300, 16)];
+    summaryLabel.tag = SUMMARYLABEL_TAG;
+    summaryLabel.font = [UIFont systemFontOfSize:13.0];
+    summaryLabel.textAlignment = UITextAlignmentLeft;
+    summaryLabel.textColor = [UIColor blackColor];
+    [scrollView addSubview:summaryLabel];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,6 +150,52 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    UIScrollView* scrollView = (UIScrollView *)[self.view viewWithTag:SCROLLVIEW_TAG];
+    UIImageView* imageView = (UIImageView *)[scrollView viewWithTag:IMAGE_TAG];
+    UITextView* synopsisText = (UITextView *)[scrollView viewWithTag:SYNOPSISTEXT_TAG];
+    UITextView* castText = (UITextView *)[scrollView viewWithTag:CASTTEXT_TAG];
+    UILabel* summaryLabel = (UILabel *)[scrollView viewWithTag:SUMMARYLABEL_TAG];
+    UIImageView* starView = (UIImageView*)[scrollView viewWithTag:GOLDSTAR_TAG];
+    
+    UIImage *posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];
+    [imageView setImage:posterImage];
+    
+    if([movie.favorite boolValue] == YES)
+    {
+        NSString *pathToStar = [[NSBundle mainBundle] pathForResource:@"goldstar" ofType:@"png"];
+        UIImage* starImage = [[UIImage alloc] initWithContentsOfFile:pathToStar];
+        [starView setImage:starImage];
+    }
+    
+    synopsisText.text = movie.synopsis;
+    
+    NSMutableString* castString = [[NSMutableString alloc] initWithCapacity:10];
+    for (Actor* actor in movie.actor) {
+        for (Role* role in actor.role) {
+            [castString appendString:actor.name];
+            [castString appendString:@" as "];
+            [castString appendString:role.name];
+            [castString appendString:@"\n"];
+        }
+    }
+    castText.text = castString;
+    
+    NSMutableString* summaryString = [[NSMutableString alloc] initWithCapacity:10];
+    [summaryString appendString:@"Rated "];
+    [summaryString appendString:movie.mpaa_rating];
+    [summaryString appendString:@" Freshness: "];
+    [summaryString appendFormat:@"%d", [movie.critics_score intValue]];
+    [summaryString appendString:@"% "];
+    [summaryString appendFormat:@"Runtime: %dhr %dmin", [movie.runtime intValue]/60, [movie.runtime intValue]%60];
+    summaryLabel.text = summaryString;
+    
+    self.navigationItem.title = movie.title;
+    UILabel* tlabel=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 300, 40)];
+    tlabel.text=self.navigationItem.title;
+    tlabel.textColor=[UIColor whiteColor];
+    tlabel.backgroundColor =[UIColor clearColor];
+    tlabel.adjustsFontSizeToFitWidth=YES;
+    self.navigationItem.titleView=tlabel;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -90,7 +223,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Detail", @"Detail");
+        //self.title = NSLocalizedString(@"Detail", @"Detail");
     }
     return self;
 }

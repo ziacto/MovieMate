@@ -7,7 +7,7 @@
 //
 
 #import "MasterViewController.h"
-
+#import "Movie.h"
 #import "DetailViewController.h"
 
 @interface MasterViewController ()
@@ -24,7 +24,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Master", @"Master");
+        self.title = NSLocalizedString(@"MovieMate", @"MovieMate");
     }
     return self;
 }
@@ -42,7 +42,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     // Set up the edit and add buttons.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    //self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
     self.navigationItem.rightBarButtonItem = addButton;
@@ -59,6 +59,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -85,7 +86,8 @@
 // Customize the number of sections in the table view.
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[self.fetchedResultsController sections] count];
+    NSInteger retVal = [[self.fetchedResultsController sections] count];
+    return retVal;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -106,8 +108,8 @@
     }
     else 
     {
-        [cell setBackgroundColor:[UIColor clearColor]];
-        titleLabel.backgroundColor = [UIColor clearColor];
+        [cell setBackgroundColor:[UIColor whiteColor]];
+        titleLabel.backgroundColor = [UIColor whiteColor];
     }
 }
 
@@ -140,7 +142,7 @@
         titleLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         [cell.contentView addSubview:titleLabel];
         
-        criticsScore = [[UIProgressView alloc] initWithFrame:CGRectMake(66, 50, 220, 15)];
+        criticsScore = [[UIProgressView alloc] initWithFrame:CGRectMake(66, 50, 210, 15)];
         criticsScore.tag = CRITICSSCORE_TAG;
         criticsScore.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         [cell.contentView addSubview:criticsScore];
@@ -196,9 +198,17 @@
     if (!self.detailViewController) {
         self.detailViewController = [[DetailViewController alloc] initWithNibName:@"DetailViewController" bundle:nil];
     }
-    NSManagedObject *selectedObject = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    self.detailViewController.detailItem = selectedObject;    
+    
+    [self.detailViewController setMovie:(Movie*)[self.fetchedResultsController objectAtIndexPath:indexPath]];
     [self.navigationController pushViewController:self.detailViewController animated:YES];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    
+    if(section == SECTION_TOP_TEN)
+        return @"Top Ten Box Office Earning Movies";
+    else
+        return @"Favorites";
 }
 
 #pragma mark - Fetched results controller
@@ -213,21 +223,22 @@
     // Create the fetch request for the entity.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Movie" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
+    //NSSortDescriptor *sortDescriptor1 = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO];
+    NSSortDescriptor *sortDescriptor2 = [[NSSortDescriptor alloc] initWithKey:@"favorite" ascending:YES];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor2, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:@"favorite" cacheName:@"Master"];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     
@@ -312,22 +323,15 @@
     UIProgressView* criticsScore = (UIProgressView *)[cell.contentView viewWithTag:CRITICSSCORE_TAG];
     UIImageView* rating = (UIImageView *)[cell.contentView viewWithTag:RATING_TAG];    
     
-    NSString* string1 = @"T";
-    NSString* string2 = @"WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
+    Movie *movie = (Movie*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     
-    if(indexPath.row %2 == 0)
-    {
-        titleLabel.text = string1;
-    }
-    else
-    {
-        titleLabel.text = string2;
-    }
+    titleLabel.text = movie.title;
     
+    //used to position rating image 5 points past end of title string
     CGFloat actualSize = 24.0f;
     CGSize stringSize = [titleLabel.text sizeWithFont:[UIFont boldSystemFontOfSize:24] minFontSize:14 actualFontSize:&actualSize forWidth:TITLE_WIDTH lineBreakMode:UILineBreakModeTailTruncation];
     
-    [criticsScore setProgress:0.5f];
+    [criticsScore setProgress:[movie.critics_score doubleValue]/100.0];
     
     //example if rating is equal to "G"
     NSString *pathToRatingG = [[NSBundle mainBundle] pathForResource:@"g" ofType:@"png"];
@@ -335,29 +339,88 @@
     rating.frame = CGRectMake(TITLE_X + stringSize.width + TITLE_RATING_SPACER, RATING_Y, RATING_WIDTH_G, RATING_HEIGHT);
     [rating setImage:imageG];
     
-    UIImage *posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://content9.flixster.com/movie/11/16/11/11161107_mob.jpg"]]];
+    UIImage *posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];
     [poster setImage:posterImage];
 }
 
 - (void)insertNewObject
 {
-    // Create a new instance of the entity managed by the fetched results controller.
+     //Create a new instance of the entity managed by the fetched results controller.
     NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
     NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
     
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
+    Movie *newMovie = [NSEntityDescription insertNewObjectForEntityForName:[entity name] 
+                                                                      inManagedObjectContext: context];
+    
+    newMovie.title = @"Harry Potter and the Silly Boofer";
+    newMovie.mpaa_rating = @"PG-13";
+    newMovie.critics_score = [NSNumber numberWithInt:93];
+    newMovie.synopsis = @"Harry Potter and the Deathly Hallows - Part 2, is the final adventure in the Harry Potter film series. The much-anticipated motion picture event is the second of two full-length parts. In the epic finale, the battle between the good and evil forces of the wizarding world escalates into an all-out war. The stakes have never been higher and no one is safe. But it is Harry Potter who may be called upon to make the ultimate sacrifice as he draws closer to the climactic showdown with Lord Voldemort. It all ends here. -- (C) Warner Bros";
+    newMovie.runtime = [NSNumber numberWithInt:133];
+    newMovie.thumbnail = @"http://content9.flixster.com/movie/11/16/11/11161107_mob.jpg";
+    newMovie.profile = @"http://content9.flixster.com/movie/11/16/11/11161107_det.jpg";
+    newMovie.favorite = [NSNumber numberWithBool:false];
+    
+    Role* role1;
+    role1 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+    role1.name = @"Ethan Hunt";
+    
+    Actor* actor1;
+    actor1 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+    actor1.name = @"Tom Cruise";
+    [actor1 addRoleObject:role1];
+    
+    Role* role2;
+    role2 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+    role2.name = @"Bad President";
+    
+    Actor* actor2;
+    actor2 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+    actor2.name = @"Bill Clinton";
+    [actor2 addRoleObject:role2];
+    
+    Role* role3;
+    role3 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+    role3.name = @"Weird Guy";
+    
+    Actor* actor3;
+    actor3 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+    actor3.name = @"Jason Fried";
+    [actor3 addRoleObject:role3];
+    
+    Role* role4;
+    role4 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+    role4.name = @"Bad Guy";
+    
+    Actor* actor4;
+    actor4 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+    actor4.name = @"Joe Schmo";
+    [actor4 addRoleObject:role4];
+    
+    Role* role5;
+    role5 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+    role5.name = @"Talk Show Hostess";
+    
+    Actor* actor5;
+    actor5 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+    actor5.name = @"Oprah Winfrey";
+    [actor5 addRoleObject:role5];
+    
+    [newMovie addActorObject:actor1];
+    [newMovie addActorObject:actor2];
+    [newMovie addActorObject:actor3];
+    [newMovie addActorObject:actor4];
+    [newMovie addActorObject:actor5];
+    
     
     // Save the context.
     NSError *error = nil;
     if (![context save:&error]) {
-        /*
-         Replace this implementation with code to handle the error appropriately.
+        
+         //Replace this implementation with code to handle the error appropriately.
          
-         abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         */
+        abort();// causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+         
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }

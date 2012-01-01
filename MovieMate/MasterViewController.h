@@ -32,6 +32,9 @@
 
 #define TITLE_RATING_SPACER 5
 
+#define SECTION_TOP_TEN 0
+#define SECTION_FAVORITES 1
+
 #import <UIKit/UIKit.h>
 
 @class DetailViewController;

@@ -293,21 +293,14 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
-    if([[self.fetchedResultsController sections] count] == 1)
+    Movie* movie = (Movie*)[self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
+    if([movie.favorite boolValue] == NO)
     {
-        return @"Top Ten Box Office Earning Movies";
+        return @"Top Box Office Earning Movies";
     }
     else
     {
-        Movie* movie = (Movie*)[self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
-        if([movie.favorite boolValue] == NO)
-        {
-            return @"Top Ten Box Office Earning Movies";
-        }
-        else
-        {
-            return @"Favorites";
-        }
+        return @"Favorites";
     }
 }
 
@@ -412,6 +405,7 @@
     UILabel* titleLabel = (UILabel *)[cell.contentView viewWithTag:TITLELABEL_TAG];
     UIProgressView* criticsScore = (UIProgressView *)[cell.contentView viewWithTag:CRITICSSCORE_TAG];
     UIImageView* rating = (UIImageView *)[cell.contentView viewWithTag:RATING_TAG];    
+    UIImage *posterImage;
     
     Movie *movie = (Movie*)[self.fetchedResultsController objectAtIndexPath:indexPath];
     
@@ -460,8 +454,14 @@
         [rating setImage:imageG];
     }
     
-    
-    UIImage *posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];
+    if([movie.favorite boolValue] == NO)
+    {
+        posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];   
+    }
+    else
+    {
+        posterImage = [UIImage imageWithContentsOfFile:movie.thumbnailFile];
+    }
     [poster setImage:posterImage];
     [theActivityIndicator stopAnimating];
 }

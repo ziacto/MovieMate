@@ -28,7 +28,12 @@
     
     // Optional: set an image, url and initial text
     [twitter setInitialText:@"Tweet from MovieMate: "];
-    [twitter addURL:[NSURL URLWithString:[NSString stringWithString:movie.alternate]]];
+    //Lets shorten the URL to insure it fits
+    NSString* longURL = movie.alternate;
+    NSString* format = @"http://tinyurl.com/api-create.php?url=%@";
+    NSString* apiEndpoint = [NSString stringWithFormat:format,longURL];
+    NSString* shortURL = [NSString stringWithContentsOfURL:[NSURL URLWithString:apiEndpoint] encoding:NSASCIIStringEncoding error:nil];
+    [twitter addURL:[NSURL URLWithString:[NSString stringWithString:shortURL]]];
     
     // Show the controller
     [self presentModalViewController:twitter animated:YES];
@@ -65,6 +70,37 @@
         NSString *pathToStar = [[NSBundle mainBundle] pathForResource:@"goldstar" ofType:@"png"];
         UIImage* starImage = [[UIImage alloc] initWithContentsOfFile:pathToStar];
         [starView setImage:starImage];
+        
+        dispatch_async(kImageQueue, ^{
+            //Go get and save the images for offline viewing
+            
+            //get list of document directories in sandbox 
+            NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            //get one and only document directory from that list
+            NSString *appDir = [documentDirectories objectAtIndex: 0];
+            
+            NSData *rawImageData = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];
+            UIImage *image = [[UIImage alloc] initWithData:rawImageData];
+            NSData *dataImage = [NSData dataWithData:UIImagePNGRepresentation(image)];
+            NSMutableString* fileName = [[NSMutableString alloc] initWithCapacity:10];
+            [fileName appendString:@"thumbnail"];
+            [fileName appendString:movie.title];
+            [fileName appendString:@".png"];
+            NSString* myFilePath = [NSString stringWithFormat:@"%@/%@",appDir,fileName];
+            [dataImage writeToFile:myFilePath atomically:YES];
+            movie.thumbnailFile = myFilePath;
+            
+            NSData *rawImageData2 = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];
+            UIImage *image2 = [[UIImage alloc] initWithData:rawImageData2];
+            NSData *dataImage2 = [NSData dataWithData:UIImagePNGRepresentation(image2)];
+            NSMutableString* fileName2 = [[NSMutableString alloc] initWithCapacity:10];
+            [fileName2 appendString:@"profile"];
+            [fileName2 appendString:movie.title];
+            [fileName2 appendString:@".png"];
+            NSString* myFilePath2 = [NSString stringWithFormat:@"%@/%@",appDir,fileName2];
+            [dataImage2 writeToFile:myFilePath2 atomically:YES];
+            movie.profileFile = myFilePath2;
+        });        
     }
     else
     {
@@ -120,7 +156,7 @@
     
     UITextView* synopsisText = [[UITextView alloc] initWithFrame:CGRectMake(5, 290, 310, 100)];
     synopsisText.tag = SYNOPSISTEXT_TAG;
-    synopsisText.font = [UIFont systemFontOfSize:10.0];
+    synopsisText.font = [UIFont systemFontOfSize:12.0];
     synopsisText.textAlignment = UITextAlignmentLeft;
     synopsisText.textColor = [UIColor blackColor];
     synopsisText.editable = NO;
@@ -136,7 +172,7 @@
     
     UITextView* castText = [[UITextView alloc] initWithFrame:CGRectMake(5, 412, 310, 100)];
     castText.tag = CASTTEXT_TAG;
-    castText.font = [UIFont systemFontOfSize:10.0];
+    castText.font = [UIFont systemFontOfSize:12.0];
     castText.textAlignment = UITextAlignmentLeft;
     castText.textColor = [UIColor blackColor];
     castText.editable = NO;
@@ -190,8 +226,17 @@
     UITextView* castText = (UITextView *)[scrollView viewWithTag:CASTTEXT_TAG];
     UILabel* summaryLabel = (UILabel *)[scrollView viewWithTag:SUMMARYLABEL_TAG];
     UIImageView* starView = (UIImageView*)[scrollView viewWithTag:GOLDSTAR_TAG];
+    UIImage *posterImage;
     
-    UIImage *posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];
+    if([movie.favorite boolValue] == NO)
+    {
+        posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];   
+    }
+    else
+    {
+        posterImage = [UIImage imageWithContentsOfFile:movie.profileFile];
+    }
+    
     [imageView setImage:posterImage];
     
     if([movie.favorite boolValue] == YES)

@@ -22,6 +22,8 @@
 #define FAVORITE_TAG 8
 #define GOLDSTAR_TAG 9
 
+#define kImageQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+
 @interface DetailViewController : UIViewController
 {
     Movie* movie;

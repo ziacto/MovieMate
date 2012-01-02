@@ -22,5 +22,7 @@
 @dynamic favorite;
 @dynamic actor;
 @dynamic alternate;
+@dynamic thumbnailFile;
+@dynamic profileFile;
 
 @end

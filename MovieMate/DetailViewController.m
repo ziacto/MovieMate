@@ -8,9 +8,11 @@
 
 #import "DetailViewController.h"
 #import "DatabaseManager.h"
+#import <Twitter/Twitter.h>
 
 @interface DetailViewController ()
 - (void)configureView;
+- (void)tweeter;
 - (void)buttonClicked:(id)sender;
 @end
 
@@ -19,11 +21,40 @@
 @synthesize movie;
 
 #pragma mark - Managing the detail item
+- (void)tweeter
+{
+    // Create the view controller
+    TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+    
+    // Optional: set an image, url and initial text
+    [twitter setInitialText:@"Tweet from MovieMate: "];
+    [twitter addURL:[NSURL URLWithString:[NSString stringWithString:movie.alternate]]];
+    
+    // Show the controller
+    [self presentModalViewController:twitter animated:YES];
+    
+    // Called when the tweet dialog has been closed
+    twitter.completionHandler = ^(TWTweetComposeViewControllerResult result) 
+    {
+        NSString *title = @"Tweet Status";
+        NSString *msg; 
+        
+        if (result == TWTweetComposeViewControllerResultCancelled)
+            msg = @"Tweet compostion was canceled.";
+        else if (result == TWTweetComposeViewControllerResultDone)
+            msg = @"Tweet composition completed.";
+        
+        // Show alert to see how things went...
+        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+        [alertView show];
+        
+        // Dismiss the controller
+        [self dismissModalViewControllerAnimated:YES];
+    };
+}
 
 - (void)buttonClicked:(id)sender
 {
-    NSLog(@"Got button press event");
-    
     UIScrollView* scrollView = (UIScrollView *)[self.view viewWithTag:SCROLLVIEW_TAG];
     UIImageView* starView = (UIImageView*)[scrollView viewWithTag:GOLDSTAR_TAG];
     
@@ -64,12 +95,12 @@
     [scrollView setBackgroundColor:[UIColor whiteColor]];
     [self.view addSubview:scrollView];
     
-    UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(70, 5, 180, 267)];
+    UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(60, 5, 180, 267)];
     imageView.tag = IMAGE_TAG;
     [scrollView addSubview:imageView];
     
     UIButton* favoriteButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    favoriteButton.frame = CGRectMake(255, 5, 63, 44);
+    favoriteButton.frame = CGRectMake(245, 5, 63, 44);
     favoriteButton.tag = FAVORITE_TAG;
     [favoriteButton setTitle:@"Favorite" forState:UIControlStateNormal];
     [favoriteButton addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -137,6 +168,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithTitle:@"Tweet" style:UIBarButtonItemStylePlain target:self action:@selector(tweeter)];
+    self.navigationItem.rightBarButtonItem = addButton;
+    
     [self configureView];
 }
 
@@ -165,6 +199,10 @@
         NSString *pathToStar = [[NSBundle mainBundle] pathForResource:@"goldstar" ofType:@"png"];
         UIImage* starImage = [[UIImage alloc] initWithContentsOfFile:pathToStar];
         [starView setImage:starImage];
+    }
+    else
+    {
+        [starView setImage:nil];
     }
     
     synopsisText.text = movie.synopsis;
@@ -195,6 +233,7 @@
     tlabel.textColor=[UIColor whiteColor];
     tlabel.backgroundColor =[UIColor clearColor];
     tlabel.adjustsFontSizeToFitWidth=YES;
+    tlabel.minimumFontSize = 14;
     self.navigationItem.titleView=tlabel;
 }
 

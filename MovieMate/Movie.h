@@ -21,6 +21,7 @@
 @property (nonatomic, retain) NSString * thumbnail;
 @property (nonatomic, retain) NSString * profile;
 @property (nonatomic, retain) NSNumber * favorite;
+@property (nonatomic, retain) NSString * alternate;
 @property (nonatomic, retain) NSSet *actor;
 @end
 

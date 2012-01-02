@@ -12,6 +12,8 @@
 
 @interface MasterViewController ()
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)fetchedData:(NSData *)responseData;
+- (void)parseResponse:(NSArray *)topMovies;
 @end
 
 @implementation MasterViewController
@@ -35,6 +37,84 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+- (void)fetchedData:(NSData *)responseData {
+    //parse out the json data
+    NSError* error;
+    NSDictionary* json = [NSJSONSerialization 
+                          JSONObjectWithData:responseData
+                          
+                          options:kNilOptions 
+                          error:&error];
+    
+    NSArray* topMovies = [json objectForKey:@"movies"];
+    
+    [self parseResponse:topMovies];
+    //NSLog(@"Top Movies: %@", topMovies);
+    
+}
+
+- (void)parseResponse:(NSArray *)topMovies
+{
+    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
+    
+    dispatch_async(kBgQueue, ^{
+        for (int x=0; x<10; x++)//top ten movies 
+        {
+            Movie *newMovie = [NSEntityDescription insertNewObjectForEntityForName:@"Movie" 
+                                                            inManagedObjectContext: context];
+            NSDictionary* movie = [topMovies objectAtIndex:x];
+            
+            newMovie.title = [movie objectForKey:@"title"];
+            NSLog(@"Movie Titles: %@", newMovie.title);
+            
+            newMovie.mpaa_rating = [movie objectForKey:@"mpaa_rating"];
+            
+            newMovie.critics_score = [[movie objectForKey:@"ratings"] objectForKey:@"critics_score"];
+            NSLog(@"Critics Score: %@", newMovie.critics_score);
+            
+            newMovie.synopsis = [movie objectForKey:@"synopsis"];
+            newMovie.runtime = [movie objectForKey:@"runtime"];
+            
+            newMovie.thumbnail = [[movie objectForKey:@"posters"] objectForKey:@"thumbnail"];
+            newMovie.profile = [[movie objectForKey:@"posters"] objectForKey:@"detailed"];
+            newMovie.alternate = [[movie objectForKey:@"links"] objectForKey:@"alternate"];
+            
+            newMovie.favorite = [NSNumber numberWithBool:false];
+            
+            NSArray* ac = [movie objectForKey:@"abridged_cast"];
+            NSLog(@"abridged cast: %@", [ac description]);
+            
+            for (int y = 0; y < [ac count]; y++) {
+                Actor* actor = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+                NSDictionary* actorArray = [ac objectAtIndex:y];
+                NSLog(@"Actor array: %@", [actorArray description]);
+                actor.name = [actorArray objectForKey:@"name"];
+                NSArray* roleArray = [actorArray objectForKey:@"characters"];
+                NSLog(@"Role array: %@", [roleArray description]);
+                for (int z = 0; z < [roleArray count]; z++) {
+                    Role* role = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+                    role.name = [roleArray objectAtIndex:z];
+                    [actor addRoleObject:role];
+                }
+                [newMovie addActorObject:actor];
+            }
+        }
+        
+        // Save the context.
+        NSError *error = nil;
+        if (![context save:&error]) {
+            
+            //Replace this implementation with code to handle the error appropriately.
+            
+            abort();// causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+            
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    });
+    //[theActivityIndicator stopAnimating];
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -44,9 +124,23 @@
     // Set up the edit and add buttons.
     //self.navigationItem.leftBarButtonItem = self.editButtonItem;
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    //UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject)];
+    //self.navigationItem.rightBarButtonItem = addButton;
     [self.tableView setRowHeight:ROW_HEIGHT];
+    rowcolorState = FALSE;
+    
+    //go get the JSON data from Rotten Tomatoes and do it on a background thread
+    theActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [self.view addSubview:theActivityIndicator];
+    theActivityIndicator.center = CGPointMake(160, 200);
+	theActivityIndicator.hidesWhenStopped = YES;
+    [theActivityIndicator startAnimating];
+    dispatch_async(kBgQueue, ^{
+        NSData* data = [NSData dataWithContentsOfURL: 
+                        kRottenTomatoesURL];
+        [self performSelectorOnMainThread:@selector(fetchedData:) 
+                               withObject:data waitUntilDone:YES];
+    });
 }
 
 - (void)viewDidUnload
@@ -59,7 +153,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -100,16 +193,19 @@
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UILabel* titleLabel = (UILabel *)[cell.contentView viewWithTag:TITLELABEL_TAG];
-    
-    if (indexPath.row % 2)
+    [cell setBackgroundColor:[UIColor clearColor]];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    if (rowcolorState == TRUE)//((([self tableView:tableView numberOfRowsInSection:indexPath.section]) & 1) && (indexPath.row & 1))
     {
         [cell setBackgroundColor:UIColorFromRGB(0xF2F2F2)];
         titleLabel.backgroundColor = UIColorFromRGB(0xF2F2F2);
+        rowcolorState = FALSE;
     }
     else 
     {
         [cell setBackgroundColor:[UIColor whiteColor]];
         titleLabel.backgroundColor = [UIColor whiteColor];
+        rowcolorState = TRUE;
     }
 }
 
@@ -142,7 +238,7 @@
         titleLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         [cell.contentView addSubview:titleLabel];
         
-        criticsScore = [[UIProgressView alloc] initWithFrame:CGRectMake(66, 50, 210, 15)];
+        criticsScore = [[UIProgressView alloc] initWithFrame:CGRectMake(66, 65, 210, 15)];
         criticsScore.tag = CRITICSSCORE_TAG;
         criticsScore.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         [cell.contentView addSubview:criticsScore];
@@ -152,19 +248,11 @@
         rating.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         [cell.contentView addSubview:rating];
     }
-
+    
     [self configureCell:cell atIndexPath:indexPath];
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -205,10 +293,22 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
-    if(section == SECTION_TOP_TEN)
+    if([[self.fetchedResultsController sections] count] == 1)
+    {
         return @"Top Ten Box Office Earning Movies";
+    }
     else
-        return @"Favorites";
+    {
+        Movie* movie = (Movie*)[self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
+        if([movie.favorite boolValue] == NO)
+        {
+            return @"Top Ten Box Office Earning Movies";
+        }
+        else
+        {
+            return @"Favorites";
+        }
+    }
 }
 
 #pragma mark - Fetched results controller
@@ -230,9 +330,8 @@
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    //NSSortDescriptor *sortDescriptor1 = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO];
-    NSSortDescriptor *sortDescriptor2 = [[NSSortDescriptor alloc] initWithKey:@"favorite" ascending:YES];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor2, nil];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor,nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
@@ -306,15 +405,6 @@
     [self.tableView endUpdates];
 }
 
-/*
-// Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    // In the simplest, most efficient, case, reload the table view.
-    [self.tableView reloadData];
-}
- */
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
@@ -334,96 +424,132 @@
     [criticsScore setProgress:[movie.critics_score doubleValue]/100.0];
     
     //example if rating is equal to "G"
-    NSString *pathToRatingG = [[NSBundle mainBundle] pathForResource:@"g" ofType:@"png"];
-    UIImage* imageG = [[UIImage alloc] initWithContentsOfFile:pathToRatingG];
-    rating.frame = CGRectMake(TITLE_X + stringSize.width + TITLE_RATING_SPACER, RATING_Y, RATING_WIDTH_G, RATING_HEIGHT);
-    [rating setImage:imageG];
+    if([movie.mpaa_rating isEqualToString:@"G"])
+    {
+        NSString *pathToRatingG = [[NSBundle mainBundle] pathForResource:@"g" ofType:@"png"];
+        UIImage* imageG = [[UIImage alloc] initWithContentsOfFile:pathToRatingG];
+        rating.frame = CGRectMake(TITLE_X + stringSize.width + TITLE_RATING_SPACER, RATING_Y, RATING_WIDTH_G, RATING_HEIGHT);
+        [rating setImage:imageG];
+    }
+    else if([movie.mpaa_rating isEqualToString:@"PG"])
+    {
+        NSString *pathToRatingG = [[NSBundle mainBundle] pathForResource:@"pg" ofType:@"png"];
+        UIImage* imageG = [[UIImage alloc] initWithContentsOfFile:pathToRatingG];
+        rating.frame = CGRectMake(TITLE_X + stringSize.width + TITLE_RATING_SPACER, RATING_Y, RATING_WIDTH_PG, RATING_HEIGHT);
+        [rating setImage:imageG];
+    }
+    else if([movie.mpaa_rating isEqualToString:@"PG-13"])
+    {
+        NSString *pathToRatingG = [[NSBundle mainBundle] pathForResource:@"pg_13" ofType:@"png"];
+        UIImage* imageG = [[UIImage alloc] initWithContentsOfFile:pathToRatingG];
+        rating.frame = CGRectMake(TITLE_X + stringSize.width + TITLE_RATING_SPACER, RATING_Y, RATING_WIDTH_NC17_PG13, RATING_HEIGHT);
+        [rating setImage:imageG];
+    }
+    else if([movie.mpaa_rating isEqualToString:@"R"])
+    {
+        NSString *pathToRatingG = [[NSBundle mainBundle] pathForResource:@"r" ofType:@"png"];
+        UIImage* imageG = [[UIImage alloc] initWithContentsOfFile:pathToRatingG];
+        rating.frame = CGRectMake(TITLE_X + stringSize.width + TITLE_RATING_SPACER, RATING_Y, RATING_WIDTH_R, RATING_HEIGHT);
+        [rating setImage:imageG];
+    }
+    else if([movie.mpaa_rating isEqualToString:@"NC-17"])
+    {
+        NSString *pathToRatingG = [[NSBundle mainBundle] pathForResource:@"nc_17" ofType:@"png"];
+        UIImage* imageG = [[UIImage alloc] initWithContentsOfFile:pathToRatingG];
+        rating.frame = CGRectMake(TITLE_X + stringSize.width + TITLE_RATING_SPACER, RATING_Y, RATING_WIDTH_NC17_PG13, RATING_HEIGHT);
+        [rating setImage:imageG];
+    }
+    
     
     UIImage *posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];
     [poster setImage:posterImage];
+    [theActivityIndicator stopAnimating];
 }
 
-- (void)insertNewObject
-{
-     //Create a new instance of the entity managed by the fetched results controller.
-    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    
-    Movie *newMovie = [NSEntityDescription insertNewObjectForEntityForName:[entity name] 
-                                                                      inManagedObjectContext: context];
-    
-    newMovie.title = @"Harry Potter and the Silly Boofer";
-    newMovie.mpaa_rating = @"PG-13";
-    newMovie.critics_score = [NSNumber numberWithInt:93];
-    newMovie.synopsis = @"Harry Potter and the Deathly Hallows - Part 2, is the final adventure in the Harry Potter film series. The much-anticipated motion picture event is the second of two full-length parts. In the epic finale, the battle between the good and evil forces of the wizarding world escalates into an all-out war. The stakes have never been higher and no one is safe. But it is Harry Potter who may be called upon to make the ultimate sacrifice as he draws closer to the climactic showdown with Lord Voldemort. It all ends here. -- (C) Warner Bros";
-    newMovie.runtime = [NSNumber numberWithInt:133];
-    newMovie.thumbnail = @"http://content9.flixster.com/movie/11/16/11/11161107_mob.jpg";
-    newMovie.profile = @"http://content9.flixster.com/movie/11/16/11/11161107_det.jpg";
-    newMovie.favorite = [NSNumber numberWithBool:false];
-    
-    Role* role1;
-    role1 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
-    role1.name = @"Ethan Hunt";
-    
-    Actor* actor1;
-    actor1 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
-    actor1.name = @"Tom Cruise";
-    [actor1 addRoleObject:role1];
-    
-    Role* role2;
-    role2 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
-    role2.name = @"Bad President";
-    
-    Actor* actor2;
-    actor2 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
-    actor2.name = @"Bill Clinton";
-    [actor2 addRoleObject:role2];
-    
-    Role* role3;
-    role3 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
-    role3.name = @"Weird Guy";
-    
-    Actor* actor3;
-    actor3 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
-    actor3.name = @"Jason Fried";
-    [actor3 addRoleObject:role3];
-    
-    Role* role4;
-    role4 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
-    role4.name = @"Bad Guy";
-    
-    Actor* actor4;
-    actor4 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
-    actor4.name = @"Joe Schmo";
-    [actor4 addRoleObject:role4];
-    
-    Role* role5;
-    role5 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
-    role5.name = @"Talk Show Hostess";
-    
-    Actor* actor5;
-    actor5 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
-    actor5.name = @"Oprah Winfrey";
-    [actor5 addRoleObject:role5];
-    
-    [newMovie addActorObject:actor1];
-    [newMovie addActorObject:actor2];
-    [newMovie addActorObject:actor3];
-    [newMovie addActorObject:actor4];
-    [newMovie addActorObject:actor5];
-    
-    
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error]) {
-        
-         //Replace this implementation with code to handle the error appropriately.
-         
-        abort();// causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-         
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-}
+//- (void)insertNewObject
+//{
+//     //Create a new instance of the entity managed by the fetched results controller.
+//    NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
+//    
+//    Movie *newMovie = [NSEntityDescription insertNewObjectForEntityForName:@"Movie" 
+//                                                                      inManagedObjectContext: context];
+//    
+//    NSMutableString* dateString = [[NSMutableString alloc] initWithCapacity:10];
+//    [dateString appendString:@"Harry Potter "];
+//    [dateString appendString:[[NSDate date] description]];
+//    
+//    newMovie.title = dateString;
+//    newMovie.mpaa_rating = @"PG-13";
+//    newMovie.critics_score = [NSNumber numberWithInt:93];
+//    newMovie.synopsis = @"Harry Potter and the Deathly Hallows - Part 2, is the final adventure in the Harry Potter film series. The much-anticipated motion picture event is the second of two full-length parts. In the epic finale, the battle between the good and evil forces of the wizarding world escalates into an all-out war. The stakes have never been higher and no one is safe. But it is Harry Potter who may be called upon to make the ultimate sacrifice as he draws closer to the climactic showdown with Lord Voldemort. It all ends here. -- (C) Warner Bros";
+//    newMovie.runtime = [NSNumber numberWithInt:133];
+//    newMovie.thumbnail = @"http://content9.flixster.com/movie/11/16/11/11161107_mob.jpg";
+//    newMovie.profile = @"http://content9.flixster.com/movie/11/16/11/11161107_det.jpg";
+//    newMovie.favorite = [NSNumber numberWithBool:false];
+//    
+//    Role* role1;
+//    role1 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+//    role1.name = @"Ethan Hunt";
+//    
+//    Actor* actor1;
+//    actor1 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+//    actor1.name = @"Tom Cruise";
+//    [actor1 addRoleObject:role1];
+//    
+//    Role* role2;
+//    role2 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+//    role2.name = @"Bad President";
+//    
+//    Actor* actor2;
+//    actor2 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+//    actor2.name = @"Bill Clinton";
+//    [actor2 addRoleObject:role2];
+//    
+//    Role* role3;
+//    role3 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+//    role3.name = @"Weird Guy";
+//    
+//    Actor* actor3;
+//    actor3 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+//    actor3.name = @"Jason Fried";
+//    [actor3 addRoleObject:role3];
+//    
+//    Role* role4;
+//    role4 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+//    role4.name = @"Bad Guy";
+//    
+//    Actor* actor4;
+//    actor4 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+//    actor4.name = @"Joe Schmo";
+//    [actor4 addRoleObject:role4];
+//    
+//    Role* role5;
+//    role5 = [NSEntityDescription insertNewObjectForEntityForName:@"Role" inManagedObjectContext:context];
+//    role5.name = @"Talk Show Hostess";
+//    
+//    Actor* actor5;
+//    actor5 = [NSEntityDescription insertNewObjectForEntityForName:@"Actor" inManagedObjectContext:context];
+//    actor5.name = @"Oprah Winfrey";
+//    [actor5 addRoleObject:role5];
+//    
+//    [newMovie addActorObject:actor1];
+//    [newMovie addActorObject:actor2];
+//    [newMovie addActorObject:actor3];
+//    [newMovie addActorObject:actor4];
+//    [newMovie addActorObject:actor5];
+//    
+//    
+//    // Save the context.
+//    NSError *error = nil;
+//    if (![context save:&error]) {
+//        
+//         //Replace this implementation with code to handle the error appropriately.
+//         
+//        abort();// causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+//         
+//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//        abort();
+//    }
+//}
 
 @end

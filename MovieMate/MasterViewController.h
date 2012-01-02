@@ -5,6 +5,8 @@
 //  Created by Dean Andreakis on 12/29/11.
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
+#define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+#define kRottenTomatoesURL [NSURL URLWithString:@"http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=uh7c6g5u3j5sew9dfafhtx8w"]
 
 #define TITLELABEL_TAG 1
 #define POSTER_TAG 2
@@ -19,11 +21,11 @@
 
 #define TITLE_X 66
 #define TITLE_Y 20
-#define TITLE_WIDTH 180
-#define TITLE_HEIGHT 24
+#define TITLE_WIDTH 160
+#define TITLE_HEIGHT 30
 
 #define RATING_X 251
-#define RATING_Y 27
+#define RATING_Y 30
 #define RATING_WIDTH_NC17_PG13 44
 #define RATING_WIDTH_G 17
 #define RATING_WIDTH_PG 27
@@ -42,6 +44,10 @@
 #import <CoreData/CoreData.h>
 
 @interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+{
+    BOOL rowcolorState;
+    UIActivityIndicatorView* theActivityIndicator;
+}
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 

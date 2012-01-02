@@ -138,5 +138,25 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(DatabaseManager);
     [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
 }
 
-
+- (void) deleteUnfavoriteObjects 
+{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Movie" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSError *error;
+    NSArray *items = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];    
+    
+    for (NSManagedObject *managedObject in items) {
+        NSNumber* fav = [managedObject valueForKey:@"favorite"];
+        if([fav boolValue] == NO)
+        {
+            [self.managedObjectContext deleteObject:managedObject];
+        }        
+    }
+    if (![self.managedObjectContext save:&error]) {
+        
+    }
+    
+}
 @end

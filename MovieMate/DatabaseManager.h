@@ -18,5 +18,5 @@
 - (void) initializeDB;
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-
+- (void) deleteUnfavoriteObjects; 
 @end

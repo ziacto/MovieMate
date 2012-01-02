@@ -21,5 +21,6 @@
 @dynamic profile;
 @dynamic favorite;
 @dynamic actor;
+@dynamic alternate;
 
 @end

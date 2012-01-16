@@ -18,5 +18,6 @@
 - (void) initializeDB;
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
-- (void) deleteUnfavoriteObjects; 
+- (void) deleteUnfavoriteObjects;
+- (BOOL) compareMovieTitle:(NSString*)title;
 @end

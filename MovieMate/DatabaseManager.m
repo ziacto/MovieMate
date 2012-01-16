@@ -159,4 +159,26 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(DatabaseManager);
     }
     
 }
+
+//returns TRUE if title NOT already a favorite; false otherwise
+- (BOOL) compareMovieTitle:(NSString*)title
+{
+    BOOL retVal = true;
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Movie" inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    NSError *error;
+    NSArray *items = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];    
+    
+    for (NSManagedObject *managedObject in items) {
+        NSString* curTitle = [managedObject valueForKey:@"title"];
+        if([curTitle isEqualToString:title])
+        {
+            retVal = false;
+            break;
+        }        
+    }
+    return retVal;
+}
 @end

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		050B3BB214BFBC7E0017DE17 /* FavoriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 050B3BB014BFBC7E0017DE17 /* FavoriteViewController.m */; };
+		050B3BB314BFBC7E0017DE17 /* FavoriteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 050B3BB114BFBC7E0017DE17 /* FavoriteViewController.xib */; };
+		050B3BB714BFC7BE0017DE17 /* TabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 050B3BB614BFC7BE0017DE17 /* TabViewController.m */; };
 		05835AE214AFA384008319A4 /* nc_17.png in Resources */ = {isa = PBXBuildFile; fileRef = 05835ADE14AFA384008319A4 /* nc_17.png */; };
 		05835AE314AFA384008319A4 /* pg_13.png in Resources */ = {isa = PBXBuildFile; fileRef = 05835ADF14AFA384008319A4 /* pg_13.png */; };
 		05835AE414AFA384008319A4 /* pg.png in Resources */ = {isa = PBXBuildFile; fileRef = 05835AE014AFA384008319A4 /* pg.png */; };
@@ -53,6 +56,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		050B3BAF14BFBC7E0017DE17 /* FavoriteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FavoriteViewController.h; sourceTree = "<group>"; };
+		050B3BB014BFBC7E0017DE17 /* FavoriteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FavoriteViewController.m; sourceTree = "<group>"; };
+		050B3BB114BFBC7E0017DE17 /* FavoriteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FavoriteViewController.xib; sourceTree = "<group>"; };
+		050B3BB514BFC7BD0017DE17 /* TabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabViewController.h; sourceTree = "<group>"; };
+		050B3BB614BFC7BE0017DE17 /* TabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabViewController.m; sourceTree = "<group>"; };
 		05835ADE14AFA384008319A4 /* nc_17.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nc_17.png; sourceTree = "<group>"; };
 		05835ADF14AFA384008319A4 /* pg_13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pg_13.png; sourceTree = "<group>"; };
 		05835AE014AFA384008319A4 /* pg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pg.png; sourceTree = "<group>"; };
@@ -73,9 +81,9 @@
 		05AE7C4514AD610E00E04FDF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		05AE7C4814AD610E00E04FDF /* MovieMate.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MovieMate.xcdatamodel; sourceTree = "<group>"; };
 		05AE7C4A14AD610E00E04FDF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
-		05AE7C4B14AD610E00E04FDF /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
+		05AE7C4B14AD610E00E04FDF /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = MasterViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		05AE7C4D14AD610E00E04FDF /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		05AE7C4E14AD610E00E04FDF /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		05AE7C4E14AD610E00E04FDF /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DetailViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		05AE7C5114AD610E00E04FDF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MasterViewController.xib; sourceTree = "<group>"; };
 		05AE7C5414AD610E00E04FDF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DetailViewController.xib; sourceTree = "<group>"; };
 		05AE7C5B14AD610E00E04FDF /* MovieMateTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieMateTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,7 +101,7 @@
 		05EDA2AD14AE2A2700B50BE5 /* Role.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Role.m; sourceTree = "<group>"; };
 		05EDA2B314AE373D00B50BE5 /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
 		05EDA2B414AE429900B50BE5 /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
-		05EDA2B514AE429900B50BE5 /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
+		05EDA2B514AE429900B50BE5 /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DatabaseManager.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		05EDA2B714AE658C00B50BE5 /* g.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = g.png; sourceTree = "<group>"; };
 		05F233A314B2278C00DE4272 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
 		05F233A614B2279300DE4272 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
@@ -163,11 +171,16 @@
 			children = (
 				05AE7C4414AD610E00E04FDF /* AppDelegate.h */,
 				05AE7C4514AD610E00E04FDF /* AppDelegate.m */,
+				050B3BB514BFC7BD0017DE17 /* TabViewController.h */,
+				050B3BB614BFC7BE0017DE17 /* TabViewController.m */,
 				05EDA2B414AE429900B50BE5 /* DatabaseManager.h */,
 				05EDA2B514AE429900B50BE5 /* DatabaseManager.m */,
 				05AE7C4A14AD610E00E04FDF /* MasterViewController.h */,
 				05EDA2B314AE373D00B50BE5 /* SynthesizeSingleton.h */,
 				05AE7C4B14AD610E00E04FDF /* MasterViewController.m */,
+				050B3BAF14BFBC7E0017DE17 /* FavoriteViewController.h */,
+				050B3BB014BFBC7E0017DE17 /* FavoriteViewController.m */,
+				050B3BB114BFBC7E0017DE17 /* FavoriteViewController.xib */,
 				05AE7C4D14AD610E00E04FDF /* DetailViewController.h */,
 				05AE7C4E14AD610E00E04FDF /* DetailViewController.m */,
 				05AE7C5014AD610E00E04FDF /* MasterViewController.xib */,
@@ -307,6 +320,7 @@
 				05835AFD14B00B6C008319A4 /* goldstar.png in Resources */,
 				05F233A414B2278C00DE4272 /* Default.png in Resources */,
 				05F233A714B2279300DE4272 /* Default@2x.png in Resources */,
+				050B3BB314BFBC7E0017DE17 /* FavoriteViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,6 +364,8 @@
 				05EDA2AB14AE2A1300B50BE5 /* Actor.m in Sources */,
 				05EDA2AE14AE2A2700B50BE5 /* Role.m in Sources */,
 				05EDA2B614AE429900B50BE5 /* DatabaseManager.m in Sources */,
+				050B3BB214BFBC7E0017DE17 /* FavoriteViewController.m in Sources */,
+				050B3BB714BFC7BE0017DE17 /* TabViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

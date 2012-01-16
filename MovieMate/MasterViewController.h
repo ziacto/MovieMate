@@ -12,6 +12,7 @@
 #define POSTER_TAG 2
 #define RATING_TAG 3
 #define CRITICSSCORE_TAG 4
+#define TABITEM_TAG 5
 
 //These are in points, not pixels so we don't have to do anything special for retina vs normal 
 #define ROW_HEIGHT 91
@@ -37,6 +38,8 @@
 #define SECTION_TOP_TEN 0
 #define SECTION_FAVORITES 1
 
+#define NUM_IN_LIST 10
+
 #import <UIKit/UIKit.h>
 
 @class DetailViewController;
@@ -46,6 +49,7 @@
 @interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 {
     BOOL rowcolorState;
+    int stopIndicator;
     UIActivityIndicatorView* theActivityIndicator;
 }
 

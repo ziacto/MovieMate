@@ -7,14 +7,12 @@
 //
 
 #import "AppDelegate.h"
-
-#import "MasterViewController.h"
+#import "TabViewController.h"
 #import "DatabaseManager.h"
 
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize navigationController = _navigationController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -22,11 +20,9 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-
-    MasterViewController *masterViewController = [[MasterViewController alloc] initWithNibName:@"MasterViewController" bundle:nil];
-    self.navigationController = [[UINavigationController alloc] initWithRootViewController:masterViewController];
-    masterViewController.managedObjectContext = [[DatabaseManager sharedDatabaseManager] managedObjectContext];
-    self.window.rootViewController = self.navigationController;
+    TabViewController* tabViewController = [[TabViewController alloc] init]; 
+     
+    self.window.rootViewController = tabViewController;
     [self.window makeKeyAndVisible];
     return YES;
 }

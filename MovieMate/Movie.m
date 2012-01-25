@@ -20,6 +20,7 @@
 @dynamic thumbnail;
 @dynamic profile;
 @dynamic favorite;
+@dynamic topten;
 @dynamic actor;
 @dynamic alternate;
 @dynamic thumbnailFile;

@@ -152,7 +152,30 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(DatabaseManager);
         if([fav boolValue] == NO)
         {
             [self.managedObjectContext deleteObject:managedObject];
-        }        
+            
+            //get list of document directories in sandbox 
+            //NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            //get one and only document directory from that list
+            //NSString *appDir = [documentDirectories objectAtIndex: 0];
+            //NSFileManager *fileMgr = [[NSFileManager alloc] init];
+            //NSError *error = nil;
+            //NSArray *directoryContents = [fileMgr contentsOfDirectoryAtPath:appDir error:&error];
+            //if (error == nil) {
+              //  for (NSString *path in directoryContents) {
+                //    NSString *fullPath = [appDir stringByAppendingPathComponent:path];
+                  //  BOOL removeSuccess = [fileMgr removeItemAtPath:fullPath error:&error];
+                    //if (!removeSuccess) {
+                        // Error handling
+                    //}
+                //}
+           // } else {
+                // Error handling
+            //}
+        }
+        else
+        {
+            [managedObject setValue:[NSNumber numberWithBool:false] forKey:@"topten"];
+        }
     }
     if (![self.managedObjectContext save:&error]) {
         
@@ -175,6 +198,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(DatabaseManager);
         NSString* curTitle = [managedObject valueForKey:@"title"];
         if([curTitle isEqualToString:title])
         {
+            [managedObject setValue:[NSNumber numberWithBool:true] forKey:@"topten"];
             retVal = false;
             break;
         }        

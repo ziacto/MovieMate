@@ -9,6 +9,7 @@
 #import "TabViewController.h"
 #import "MasterViewController.h"
 #import "FavoriteViewController.h"
+#import "InfoViewController.h"
 #import "DatabaseManager.h"
 
 @implementation TabViewController
@@ -46,6 +47,7 @@
     
     MasterViewController *masterViewController = [[MasterViewController alloc] initWithNibName:@"MasterViewController" bundle:nil];
     FavoriteViewController *favoriteViewController = [[FavoriteViewController alloc] initWithNibName:@"FavoriteViewController" bundle:nil];
+    InfoViewController *infoViewController = [[InfoViewController alloc] init];
     
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.view.frame = CGRectMake(0, 0, 320, 460);
@@ -54,7 +56,7 @@
     self.navigationControllerFavorite = [[UINavigationController alloc] initWithRootViewController:favoriteViewController];
     
     [self.tabBarController setViewControllers:
-     [NSArray arrayWithObjects: self.navigationController, self.navigationControllerFavorite, nil]];
+     [NSArray arrayWithObjects: self.navigationController, self.navigationControllerFavorite, infoViewController, nil]];
     [self.tabBarController setDelegate:self];
     
     masterViewController.managedObjectContext = [[DatabaseManager sharedDatabaseManager] managedObjectContext];

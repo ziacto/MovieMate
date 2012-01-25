@@ -20,6 +20,7 @@
         <attribute name="thumbnail" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="thumbnailFile" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="topten" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="actor" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Actor" inverseName="movie" inverseEntity="Actor" syncable="YES"/>
     </entity>
     <entity name="Role" representedClassName="Role" syncable="YES">
@@ -29,7 +30,7 @@
     <elements>
         <element name="Actor" positionX="-171" positionY="108" width="128" height="90"/>
         <element name="Event" positionX="261" positionY="189" width="128" height="60"/>
-        <element name="Movie" positionX="90" positionY="189" width="128" height="225"/>
+        <element name="Movie" positionX="90" positionY="189" width="128" height="240"/>
         <element name="Role" positionX="-38" positionY="-6" width="128" height="75"/>
     </elements>
 </model>

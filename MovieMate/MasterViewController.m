@@ -15,6 +15,7 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (void)fetchedData:(NSData *)responseData;
 - (void)parseResponse:(NSArray *)topMovies;
+- (void)refresher;
 @end
 
 @implementation MasterViewController
@@ -27,8 +28,10 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"MovieMate", @"MovieMate");
-        self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemTopRated tag:TABITEM_TAG];
+        self.title = NSLocalizedString(@"Top Earning Movies", @"Top Earning Movies");
+        //self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemTopRated tag:TABITEM_TAG];
+        self.tabBarItem.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"clapboard" ofType:@"png"]];
+        self.tabBarItem.title = @"Top Earners";
     }
     return self;
 }
@@ -52,6 +55,7 @@
     
     [self parseResponse:topMovies];
     ////NSLog(@"Top Movies: %@", topMovies);
+    
     
 }
 
@@ -84,6 +88,7 @@
                 newMovie.alternate = [[movie objectForKey:@"links"] objectForKey:@"alternate"];
                 
                 newMovie.favorite = [NSNumber numberWithBool:false];
+                newMovie.topten = [NSNumber numberWithBool:true];
                 
                 NSArray* ac = [movie objectForKey:@"abridged_cast"];
                 //NSLog(@"abridged cast: %@", [ac description]);
@@ -102,7 +107,36 @@
                     }
                     [newMovie addActorObject:actor];
                 }
+                //Go get and save the images for offline viewing
+                
+                //get list of document directories in sandbox 
+                NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                //get one and only document directory from that list
+                NSString *appDir = [documentDirectories objectAtIndex: 0];
+                
+                NSData *rawImageData = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:newMovie.thumbnail]]];
+                UIImage *image = [[UIImage alloc] initWithData:rawImageData];
+                NSData *dataImage = [NSData dataWithData:UIImagePNGRepresentation(image)];
+                NSMutableString* fileName = [[NSMutableString alloc] initWithCapacity:10];
+                [fileName appendString:@"thumbnail"];
+                [fileName appendString:newMovie.title];
+                [fileName appendString:@".png"];
+                NSString* myFilePath = [NSString stringWithFormat:@"%@/%@",appDir,fileName];
+                [dataImage writeToFile:myFilePath atomically:YES];
+                newMovie.thumbnailFile = myFilePath;
+                
+                NSData *rawImageData2 = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:newMovie.profile]]];
+                UIImage *image2 = [[UIImage alloc] initWithData:rawImageData2];
+                NSData *dataImage2 = [NSData dataWithData:UIImagePNGRepresentation(image2)];
+                NSMutableString* fileName2 = [[NSMutableString alloc] initWithCapacity:10];
+                [fileName2 appendString:@"profile"];
+                [fileName2 appendString:newMovie.title];
+                [fileName2 appendString:@".png"];
+                NSString* myFilePath2 = [NSString stringWithFormat:@"%@/%@",appDir,fileName2];
+                [dataImage2 writeToFile:myFilePath2 atomically:YES];
+                newMovie.profileFile = myFilePath2;
             }
+            [theActivityIndicator stopAnimating];
         }
         
         // Save the context.
@@ -119,6 +153,18 @@
     });
 }
 
+- (void)refresher
+{
+    [[DatabaseManager sharedDatabaseManager] deleteUnfavoriteObjects];
+    [theActivityIndicator startAnimating];
+    dispatch_async(kBgQueue, ^{
+        NSData* data = [NSData dataWithContentsOfURL: 
+                        kRottenTomatoesURL];
+        [self performSelectorOnMainThread:@selector(fetchedData:) 
+                               withObject:data waitUntilDone:YES];
+    });
+}
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
@@ -129,18 +175,15 @@
     rowcolorState = FALSE;
     stopIndicator = 0;
     
+    UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresher)];
+    self.navigationItem.rightBarButtonItem = refreshButton;
+    
     //go get the JSON data from Rotten Tomatoes and do it on a background thread
     theActivityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [self.view addSubview:theActivityIndicator];
     theActivityIndicator.center = CGPointMake(160, 200);
 	theActivityIndicator.hidesWhenStopped = YES;
-    [theActivityIndicator startAnimating];
-    dispatch_async(kBgQueue, ^{
-        NSData* data = [NSData dataWithContentsOfURL: 
-                        kRottenTomatoesURL];
-        [self performSelectorOnMainThread:@selector(fetchedData:) 
-                               withObject:data waitUntilDone:YES];
-    });
+    [self refresher];
 }
 
 - (void)viewDidUnload
@@ -207,10 +250,10 @@
         titleLabel.backgroundColor = [UIColor whiteColor];
         rowcolorState = TRUE;
     }
-    stopIndicator++;
-    if (stopIndicator > (NUM_IN_LIST - 1)) {
-        [theActivityIndicator stopAnimating];
-    }
+    //stopIndicator++;
+    //if (stopIndicator > (NUM_IN_LIST - 1)) {
+      //  [theActivityIndicator stopAnimating];
+    //}
     
 }
 
@@ -334,8 +377,8 @@
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    //NSPredicate *fetchPredicate = [NSPredicate predicateWithFormat:@"favorite == %@", [NSNumber numberWithBool: NO]];
-    //[fetchRequest setPredicate:fetchPredicate];
+    NSPredicate *fetchPredicate = [NSPredicate predicateWithFormat:@"topten == %@", [NSNumber numberWithBool: YES]];
+    [fetchRequest setPredicate:fetchPredicate];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
@@ -463,14 +506,14 @@
         [rating setImage:imageG];
     }
     
-    if([movie.favorite boolValue] == NO)
-    {
-        posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];   
-    }
-    else
-    {
+    //if([movie.favorite boolValue] == NO)
+    //{
+      //  posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];   
+    //}
+    //else
+    //{
         posterImage = [UIImage imageWithContentsOfFile:movie.thumbnailFile];
-    }
+    //}
     [poster setImage:posterImage];
 }
 

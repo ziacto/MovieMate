@@ -71,36 +71,36 @@
         UIImage* starImage = [[UIImage alloc] initWithContentsOfFile:pathToStar];
         [starView setImage:starImage];
         
-        dispatch_async(kImageQueue, ^{
-            //Go get and save the images for offline viewing
-            
-            //get list of document directories in sandbox 
-            NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            //get one and only document directory from that list
-            NSString *appDir = [documentDirectories objectAtIndex: 0];
-            
-            NSData *rawImageData = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];
-            UIImage *image = [[UIImage alloc] initWithData:rawImageData];
-            NSData *dataImage = [NSData dataWithData:UIImagePNGRepresentation(image)];
-            NSMutableString* fileName = [[NSMutableString alloc] initWithCapacity:10];
-            [fileName appendString:@"thumbnail"];
-            [fileName appendString:movie.title];
-            [fileName appendString:@".png"];
-            NSString* myFilePath = [NSString stringWithFormat:@"%@/%@",appDir,fileName];
-            [dataImage writeToFile:myFilePath atomically:YES];
-            movie.thumbnailFile = myFilePath;
-            
-            NSData *rawImageData2 = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];
-            UIImage *image2 = [[UIImage alloc] initWithData:rawImageData2];
-            NSData *dataImage2 = [NSData dataWithData:UIImagePNGRepresentation(image2)];
-            NSMutableString* fileName2 = [[NSMutableString alloc] initWithCapacity:10];
-            [fileName2 appendString:@"profile"];
-            [fileName2 appendString:movie.title];
-            [fileName2 appendString:@".png"];
-            NSString* myFilePath2 = [NSString stringWithFormat:@"%@/%@",appDir,fileName2];
-            [dataImage2 writeToFile:myFilePath2 atomically:YES];
-            movie.profileFile = myFilePath2;
-        });        
+//        dispatch_async(kImageQueue, ^{
+//            //Go get and save the images for offline viewing
+//            
+//            //get list of document directories in sandbox 
+//            NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            //get one and only document directory from that list
+//            NSString *appDir = [documentDirectories objectAtIndex: 0];
+//            
+//            NSData *rawImageData = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];
+//            UIImage *image = [[UIImage alloc] initWithData:rawImageData];
+//            NSData *dataImage = [NSData dataWithData:UIImagePNGRepresentation(image)];
+//            NSMutableString* fileName = [[NSMutableString alloc] initWithCapacity:10];
+//            [fileName appendString:@"thumbnail"];
+//            [fileName appendString:movie.title];
+//            [fileName appendString:@".png"];
+//            NSString* myFilePath = [NSString stringWithFormat:@"%@/%@",appDir,fileName];
+//            [dataImage writeToFile:myFilePath atomically:YES];
+//            movie.thumbnailFile = myFilePath;
+//            
+//            NSData *rawImageData2 = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];
+//            UIImage *image2 = [[UIImage alloc] initWithData:rawImageData2];
+//            NSData *dataImage2 = [NSData dataWithData:UIImagePNGRepresentation(image2)];
+//            NSMutableString* fileName2 = [[NSMutableString alloc] initWithCapacity:10];
+//            [fileName2 appendString:@"profile"];
+//            [fileName2 appendString:movie.title];
+//            [fileName2 appendString:@".png"];
+//            NSString* myFilePath2 = [NSString stringWithFormat:@"%@/%@",appDir,fileName2];
+//            [dataImage2 writeToFile:myFilePath2 atomically:YES];
+//            movie.profileFile = myFilePath2;
+//        });        
     }
     else
     {
@@ -113,12 +113,7 @@
     NSError *error = nil;
     if (![context save:&error]) {
         
-        //Replace this implementation with code to handle the error appropriately.
         
-        //abort();// causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-        
-        //NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        //abort();
     }
 }
 
@@ -127,8 +122,9 @@
     
     UIScrollView* scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
     scrollView.tag = SCROLLVIEW_TAG;
-    [scrollView setContentSize:CGSizeMake(320, 570)];
+    [scrollView setContentSize:CGSizeMake(320, 800)];
     [scrollView setBackgroundColor:[UIColor whiteColor]];
+    //[scrollView setContentOffset:CGPointMake(0,0) animated:NO];
     [self.view addSubview:scrollView];
     
     UIImageView* imageView = [[UIImageView alloc] initWithFrame:CGRectMake(60, 5, 180, 267)];
@@ -154,15 +150,16 @@
     synopsisLabel.text = @"Synopsis";
     [scrollView addSubview:synopsisLabel];
     
-    UITextView* synopsisText = [[UITextView alloc] initWithFrame:CGRectMake(5, 290, 310, 100)];
+    UILabel* synopsisText = [[UILabel alloc] initWithFrame:CGRectMake(SYNOPSISTEXT_X, SYNOPSISTEXT_Y, SYNOPSISTEXT_WIDTH, SYNOPSISTEXT_HEIGHT)];
     synopsisText.tag = SYNOPSISTEXT_TAG;
     synopsisText.font = [UIFont systemFontOfSize:12.0];
     synopsisText.textAlignment = UITextAlignmentLeft;
     synopsisText.textColor = [UIColor blackColor];
-    synopsisText.editable = NO;
+    synopsisText.lineBreakMode = UILineBreakModeWordWrap;
+    synopsisText.numberOfLines = 0;
     [scrollView addSubview:synopsisText];
     
-    UILabel* castLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 395, 250, 16)];
+    UILabel* castLabel = [[UILabel alloc] initWithFrame:CGRectMake(CASTLABEL_X, CASTLABEL_Y, CASTLABEL_WIDTH, CASTLABEL_HEIGHT)];
     castLabel.tag = CASTLABEL_TAG;
     castLabel.font = [UIFont boldSystemFontOfSize:14.0];
     castLabel.textAlignment = UITextAlignmentLeft;
@@ -170,21 +167,22 @@
     castLabel.text = @"Cast";
     [scrollView addSubview:castLabel];
     
-    UITextView* castText = [[UITextView alloc] initWithFrame:CGRectMake(5, 412, 310, 100)];
+    UILabel* castText = [[UILabel alloc] initWithFrame:CGRectMake(CASTTEXT_X, CASTTEXT_Y, CASTTEXT_WIDTH, CASTTEXT_HEIGHT)];
     castText.tag = CASTTEXT_TAG;
     castText.font = [UIFont systemFontOfSize:12.0];
     castText.textAlignment = UITextAlignmentLeft;
     castText.textColor = [UIColor blackColor];
-    castText.editable = NO;
+    castText.lineBreakMode = UILineBreakModeWordWrap;
+    castText.numberOfLines = 0;
     [scrollView addSubview:castText];
     
     
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(5, 535, 305, 2)];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(LINEVIEW_X, LINEVIEW_Y, LINEVIEW_WIDTH, LINEVIEW_HEIGHT)];
     lineView.backgroundColor = [UIColor blackColor];
     lineView.tag = DIVIDER_TAG;
     [scrollView addSubview:lineView];
     
-    UILabel* summaryLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 545, 300, 16)];
+    UILabel* summaryLabel = [[UILabel alloc] initWithFrame:CGRectMake(SUMMARYLABEL_X, SUMMARYLABEL_Y, SUMMARYLABEL_WIDTH, SUMMARYLABEL_HEIGHT)];
     summaryLabel.tag = SUMMARYLABEL_TAG;
     summaryLabel.font = [UIFont systemFontOfSize:13.0];
     summaryLabel.textAlignment = UITextAlignmentLeft;
@@ -204,7 +202,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithTitle:@"Tweet" style:UIBarButtonItemStylePlain target:self action:@selector(tweeter)];
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"twitter" ofType:@"png"]] style:UIBarButtonItemStylePlain target:self action:@selector(tweeter)];
+    //[[UIBarButtonItem alloc] initWithTitle:@"Tweet" style:UIBarButtonItemStylePlain target:self action:@selector(tweeter)];
     self.navigationItem.rightBarButtonItem = addButton;
     
     [self configureView];
@@ -222,20 +221,22 @@
     [super viewWillAppear:animated];
     UIScrollView* scrollView = (UIScrollView *)[self.view viewWithTag:SCROLLVIEW_TAG];
     UIImageView* imageView = (UIImageView *)[scrollView viewWithTag:IMAGE_TAG];
-    UITextView* synopsisText = (UITextView *)[scrollView viewWithTag:SYNOPSISTEXT_TAG];
-    UITextView* castText = (UITextView *)[scrollView viewWithTag:CASTTEXT_TAG];
+    UILabel* synopsisText = (UILabel *)[scrollView viewWithTag:SYNOPSISTEXT_TAG];
+    UILabel* castLabel = (UILabel*)[scrollView viewWithTag:CASTLABEL_TAG];
+    UILabel* castText = (UILabel *)[scrollView viewWithTag:CASTTEXT_TAG];
     UILabel* summaryLabel = (UILabel *)[scrollView viewWithTag:SUMMARYLABEL_TAG];
     UIImageView* starView = (UIImageView*)[scrollView viewWithTag:GOLDSTAR_TAG];
+    UIView* lineView = (UIView*)[scrollView viewWithTag:DIVIDER_TAG];
     UIImage *posterImage;
     
-    if([movie.favorite boolValue] == NO)
-    {
-        posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];   
-    }
-    else
-    {
+    //if([movie.favorite boolValue] == NO)
+    //{
+      //  posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];   
+    //}
+    //else
+    //{
         posterImage = [UIImage imageWithContentsOfFile:movie.profileFile];
-    }
+    //}
     
     [imageView setImage:posterImage];
     
@@ -250,7 +251,12 @@
         [starView setImage:nil];
     }
     
+    CGSize constraintSize = CGSizeMake(SYNOPSISTEXT_WIDTH, 800);
+    CGSize stringSize = [movie.synopsis sizeWithFont:[UIFont systemFontOfSize:12.0] constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
+    synopsisText.frame = CGRectMake(SYNOPSISTEXT_X, SYNOPSISTEXT_Y, SYNOPSISTEXT_WIDTH, stringSize.height);
     synopsisText.text = movie.synopsis;
+    
+    castLabel.frame = CGRectMake(CASTLABEL_X, SYNOPSISTEXT_Y + stringSize.height + 5, CASTLABEL_WIDTH, CASTLABEL_HEIGHT);
     
     NSMutableString* castString = [[NSMutableString alloc] initWithCapacity:10];
     for (Actor* actor in movie.actor) {
@@ -261,7 +267,11 @@
             [castString appendString:@"\n"];
         }
     }
+    CGSize ctstringSize = [castString sizeWithFont:[UIFont systemFontOfSize:12.0] constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
+    castText.frame = CGRectMake(CASTTEXT_X, SYNOPSISTEXT_Y + stringSize.height + 5 + CASTLABEL_HEIGHT + 5, CASTTEXT_WIDTH, ctstringSize.height);
     castText.text = castString;
+    
+    lineView.frame = CGRectMake(LINEVIEW_X, SYNOPSISTEXT_Y + stringSize.height + 5 + CASTLABEL_HEIGHT + 5 + ctstringSize.height + 5, LINEVIEW_WIDTH, LINEVIEW_HEIGHT);
     
     NSMutableString* summaryString = [[NSMutableString alloc] initWithCapacity:10];
     [summaryString appendString:@"Rated "];
@@ -270,6 +280,8 @@
     [summaryString appendFormat:@"%d", [movie.critics_score intValue]];
     [summaryString appendString:@"% "];
     [summaryString appendFormat:@"Runtime: %dhr %dmin", [movie.runtime intValue]/60, [movie.runtime intValue]%60];
+    CGSize slstringSize = [summaryString sizeWithFont:[UIFont systemFontOfSize:13.0] constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
+    summaryLabel.frame = CGRectMake(SUMMARYLABEL_X, SYNOPSISTEXT_Y + stringSize.height + 5 + CASTLABEL_HEIGHT + 5 + ctstringSize.height + 5 + LINEVIEW_HEIGHT + 5, SUMMARYLABEL_WIDTH, slstringSize.height);
     summaryLabel.text = summaryString;
     
     self.navigationItem.title = movie.title;
@@ -278,7 +290,7 @@
     tlabel.textColor=[UIColor whiteColor];
     tlabel.backgroundColor =[UIColor clearColor];
     tlabel.adjustsFontSizeToFitWidth=YES;
-    tlabel.minimumFontSize = 14;
+    tlabel.minimumFontSize = 18;
     self.navigationItem.titleView=tlabel;
 }
 

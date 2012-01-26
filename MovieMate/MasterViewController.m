@@ -23,6 +23,8 @@
 @synthesize detailViewController = _detailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
+@synthesize urlConnectionManager;
+@synthesize theRequest;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -32,10 +34,24 @@
         //self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemTopRated tag:TABITEM_TAG];
         self.tabBarItem.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"clapboard" ofType:@"png"]];
         self.tabBarItem.title = @"Top Earners";
+        self.urlConnectionManager = [[URLConnectionManager alloc] init];
+        [self.urlConnectionManager setDelegate:self];
+        
+        self.theRequest = [NSURLRequest requestWithURL:kRottenTomatoesURL
+                                                      cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                  timeoutInterval:60.0];
     }
     return self;
 }
-							
+
+
+-(void)urlData:(NSData*)responseData
+{
+    //the response data has been received from the URLConnectionManager object
+    [self fetchedData:responseData];
+}
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -157,12 +173,29 @@
 {
     [[DatabaseManager sharedDatabaseManager] deleteUnfavoriteObjects];
     [theActivityIndicator startAnimating];
-    dispatch_async(kBgQueue, ^{
+    
+    NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:self.theRequest delegate:urlConnectionManager];
+    if (theConnection) {
+        // Create the NSMutableData to hold the received data.
+        // receivedData is an instance variable declared elsewhere.
+        //receivedData = [[NSMutableData data] retain];
+    } else {
+        // Inform the user that the connection failed.
+        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                          message:@"connection cannot be initialized"
+                                                         delegate:nil
+                                                cancelButtonTitle:@"OK"
+                                                otherButtonTitles:nil];
+        
+        [message show];
+    }
+    
+    /*dispatch_async(kBgQueue, ^{
         NSData* data = [NSData dataWithContentsOfURL: 
                         kRottenTomatoesURL];
         [self performSelectorOnMainThread:@selector(fetchedData:) 
                                withObject:data waitUntilDone:YES];
-    });
+    });*/
 }
 
 #pragma mark - View lifecycle

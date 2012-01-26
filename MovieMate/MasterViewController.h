@@ -45,16 +45,20 @@
 @class DetailViewController;
 
 #import <CoreData/CoreData.h>
+#import "URLConnectionManager.h"
 
-@interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate>
+@interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate, URLConnectionManagerDelegate>
 {
     BOOL rowcolorState;
     int stopIndicator;
     UIActivityIndicatorView* theActivityIndicator;
+    URLConnectionManager* urlConnectionManager;
+    NSURLRequest *theRequest;
 }
 
+@property (strong, nonatomic) NSURLRequest* theRequest;
 @property (strong, nonatomic) DetailViewController *detailViewController;
-
+@property (strong, nonatomic) URLConnectionManager* urlConnectionManager;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 

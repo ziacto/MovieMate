@@ -7,6 +7,7 @@
 //
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 #define kRottenTomatoesURL [NSURL URLWithString:@"http://api.rottentomatoes.com/api/public/v1.0/lists/movies/box_office.json?apikey=uh7c6g5u3j5sew9dfafhtx8w"]
+#define RTHOSTNAME @"www.rottentomatoes.com"
 
 #define TITLELABEL_TAG 1
 #define POSTER_TAG 2

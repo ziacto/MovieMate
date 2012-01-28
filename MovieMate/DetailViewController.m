@@ -69,38 +69,7 @@
         movie.favorite = [NSNumber numberWithBool:true];
         NSString *pathToStar = [[NSBundle mainBundle] pathForResource:@"goldstar" ofType:@"png"];
         UIImage* starImage = [[UIImage alloc] initWithContentsOfFile:pathToStar];
-        [starView setImage:starImage];
-        
-//        dispatch_async(kImageQueue, ^{
-//            //Go get and save the images for offline viewing
-//            
-//            //get list of document directories in sandbox 
-//            NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//            //get one and only document directory from that list
-//            NSString *appDir = [documentDirectories objectAtIndex: 0];
-//            
-//            NSData *rawImageData = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];
-//            UIImage *image = [[UIImage alloc] initWithData:rawImageData];
-//            NSData *dataImage = [NSData dataWithData:UIImagePNGRepresentation(image)];
-//            NSMutableString* fileName = [[NSMutableString alloc] initWithCapacity:10];
-//            [fileName appendString:@"thumbnail"];
-//            [fileName appendString:movie.title];
-//            [fileName appendString:@".png"];
-//            NSString* myFilePath = [NSString stringWithFormat:@"%@/%@",appDir,fileName];
-//            [dataImage writeToFile:myFilePath atomically:YES];
-//            movie.thumbnailFile = myFilePath;
-//            
-//            NSData *rawImageData2 = [[NSData alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];
-//            UIImage *image2 = [[UIImage alloc] initWithData:rawImageData2];
-//            NSData *dataImage2 = [NSData dataWithData:UIImagePNGRepresentation(image2)];
-//            NSMutableString* fileName2 = [[NSMutableString alloc] initWithCapacity:10];
-//            [fileName2 appendString:@"profile"];
-//            [fileName2 appendString:movie.title];
-//            [fileName2 appendString:@".png"];
-//            NSString* myFilePath2 = [NSString stringWithFormat:@"%@/%@",appDir,fileName2];
-//            [dataImage2 writeToFile:myFilePath2 atomically:YES];
-//            movie.profileFile = myFilePath2;
-//        });        
+        [starView setImage:starImage];        
     }
     else
     {
@@ -203,7 +172,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"twitter" ofType:@"png"]] style:UIBarButtonItemStylePlain target:self action:@selector(tweeter)];
-    //[[UIBarButtonItem alloc] initWithTitle:@"Tweet" style:UIBarButtonItemStylePlain target:self action:@selector(tweeter)];
     self.navigationItem.rightBarButtonItem = addButton;
     
     [self configureView];
@@ -229,14 +197,7 @@
     UIView* lineView = (UIView*)[scrollView viewWithTag:DIVIDER_TAG];
     UIImage *posterImage;
     
-    //if([movie.favorite boolValue] == NO)
-    //{
-      //  posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.profile]]];   
-    //}
-    //else
-    //{
-        posterImage = [UIImage imageWithContentsOfFile:movie.profileFile];
-    //}
+    posterImage = [UIImage imageWithContentsOfFile:movie.profileFile];
     
     [imageView setImage:posterImage];
     
@@ -319,7 +280,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        //self.title = NSLocalizedString(@"Detail", @"Detail");
     }
     return self;
 }

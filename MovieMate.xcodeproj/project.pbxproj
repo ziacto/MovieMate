@@ -17,6 +17,9 @@
 		0515406F14CE4D7C002B9D9A /* information@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0515406D14CE4D7C002B9D9A /* information@2x.png */; };
 		0515407514CE5D1C002B9D9A /* twitter.png in Resources */ = {isa = PBXBuildFile; fileRef = 0515407414CE5D1C002B9D9A /* twitter.png */; };
 		0515407814D0CBC3002B9D9A /* URLConnectionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0515407714D0CBC2002B9D9A /* URLConnectionManager.m */; };
+		0515408814D235BB002B9D9A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0515408714D235BB002B9D9A /* SystemConfiguration.framework */; };
+		0515408B14D235FF002B9D9A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 0515408A14D235FF002B9D9A /* Reachability.m */; };
+		0515409614D4B8A7002B9D9A /* UpcomingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0515409514D4B8A6002B9D9A /* UpcomingViewController.m */; };
 		0580BEC614C67C8D00911BF9 /* clapboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 0580BEC514C67C8D00911BF9 /* clapboard.png */; };
 		05835AE214AFA384008319A4 /* nc_17.png in Resources */ = {isa = PBXBuildFile; fileRef = 05835ADE14AFA384008319A4 /* nc_17.png */; };
 		05835AE314AFA384008319A4 /* pg_13.png in Resources */ = {isa = PBXBuildFile; fileRef = 05835ADF14AFA384008319A4 /* pg_13.png */; };
@@ -75,6 +78,11 @@
 		0515407414CE5D1C002B9D9A /* twitter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = twitter.png; sourceTree = "<group>"; };
 		0515407614D0CBC2002B9D9A /* URLConnectionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = URLConnectionManager.h; sourceTree = "<group>"; };
 		0515407714D0CBC2002B9D9A /* URLConnectionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = URLConnectionManager.m; sourceTree = "<group>"; };
+		0515408714D235BB002B9D9A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0515408914D235FF002B9D9A /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		0515408A14D235FF002B9D9A /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		0515409414D4B8A6002B9D9A /* UpcomingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpcomingViewController.h; sourceTree = "<group>"; };
+		0515409514D4B8A6002B9D9A /* UpcomingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpcomingViewController.m; sourceTree = "<group>"; };
 		0580BEC514C67C8D00911BF9 /* clapboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clapboard.png; sourceTree = "<group>"; };
 		05835ADE14AFA384008319A4 /* nc_17.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nc_17.png; sourceTree = "<group>"; };
 		05835ADF14AFA384008319A4 /* pg_13.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pg_13.png; sourceTree = "<group>"; };
@@ -131,6 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0515408814D235BB002B9D9A /* SystemConfiguration.framework in Frameworks */,
 				05DBEE1314B110A0008CB55E /* Twitter.framework in Frameworks */,
 				05AE7C3414AD610E00E04FDF /* UIKit.framework in Frameworks */,
 				05AE7C3614AD610E00E04FDF /* Foundation.framework in Frameworks */,
@@ -153,6 +162,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0515408614D2351A002B9D9A /* Connectivity */ = {
+			isa = PBXGroup;
+			children = (
+				0515408914D235FF002B9D9A /* Reachability.h */,
+				0515408A14D235FF002B9D9A /* Reachability.m */,
+				0515407614D0CBC2002B9D9A /* URLConnectionManager.h */,
+				0515407714D0CBC2002B9D9A /* URLConnectionManager.m */,
+			);
+			name = Connectivity;
+			sourceTree = "<group>";
+		};
 		05AE7C2414AD610D00E04FDF = {
 			isa = PBXGroup;
 			children = (
@@ -175,6 +195,7 @@
 		05AE7C3214AD610E00E04FDF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0515408714D235BB002B9D9A /* SystemConfiguration.framework */,
 				05DBEE1214B110A0008CB55E /* Twitter.framework */,
 				05AE7C3314AD610E00E04FDF /* UIKit.framework */,
 				05AE7C3514AD610E00E04FDF /* Foundation.framework */,
@@ -188,6 +209,7 @@
 		05AE7C3B14AD610E00E04FDF /* MovieMate */ = {
 			isa = PBXGroup;
 			children = (
+				0515408614D2351A002B9D9A /* Connectivity */,
 				05CEA9A614CB623D00F30A2A /* Controller */,
 				05CEA9A514CB61FF00F30A2A /* View */,
 				05CEA9A414CB617400F30A2A /* Model */,
@@ -279,14 +301,14 @@
 				050B3BB614BFC7BE0017DE17 /* TabViewController.m */,
 				05AE7C4A14AD610E00E04FDF /* MasterViewController.h */,
 				05AE7C4B14AD610E00E04FDF /* MasterViewController.m */,
+				0515409414D4B8A6002B9D9A /* UpcomingViewController.h */,
+				0515409514D4B8A6002B9D9A /* UpcomingViewController.m */,
 				05CEA99314CB0BEC00F30A2A /* InfoViewController.h */,
 				05CEA99414CB0BEC00F30A2A /* InfoViewController.m */,
 				050B3BAF14BFBC7E0017DE17 /* FavoriteViewController.h */,
 				050B3BB014BFBC7E0017DE17 /* FavoriteViewController.m */,
 				05AE7C4D14AD610E00E04FDF /* DetailViewController.h */,
 				05AE7C4E14AD610E00E04FDF /* DetailViewController.m */,
-				0515407614D0CBC2002B9D9A /* URLConnectionManager.h */,
-				0515407714D0CBC2002B9D9A /* URLConnectionManager.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -428,6 +450,8 @@
 				050B3BB714BFC7BE0017DE17 /* TabViewController.m in Sources */,
 				05CEA99514CB0BEC00F30A2A /* InfoViewController.m in Sources */,
 				0515407814D0CBC3002B9D9A /* URLConnectionManager.m in Sources */,
+				0515408B14D235FF002B9D9A /* Reachability.m in Sources */,
+				0515409614D4B8A7002B9D9A /* UpcomingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

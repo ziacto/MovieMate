@@ -100,21 +100,6 @@
 //Highlight the alternating rows
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UILabel* titleLabel = (UILabel *)[cell.contentView viewWithTag:TITLELABEL_TAG];
-    [cell setBackgroundColor:[UIColor clearColor]];
-    titleLabel.backgroundColor = [UIColor clearColor];
-    if (rowcolorState == TRUE)
-    {
-        [cell setBackgroundColor:UIColorFromRGB(0xF2F2F2)];
-        titleLabel.backgroundColor = UIColorFromRGB(0xF2F2F2);
-        rowcolorState = FALSE;
-    }
-    else 
-    {
-        [cell setBackgroundColor:[UIColor whiteColor]];
-        titleLabel.backgroundColor = [UIColor whiteColor];
-        rowcolorState = TRUE;
-    }    
 }
 
 // Customize the appearance of table view cells.
@@ -171,13 +156,7 @@
         // Save the context.
         NSError *error = nil;
         if (![context save:&error]) {
-            /*
-             Replace this implementation with code to handle the error appropriately.
-             
-             abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-             */
-            //NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            //abort();
+            
         }
     }   
 }
@@ -233,13 +212,7 @@
     
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
-	    /*
-	     Replace this implementation with code to handle the error appropriately.
-         
-	     abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-	     */
-	    //NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    //abort();
+	    
 	}
     
     return __fetchedResultsController;
@@ -351,14 +324,7 @@
         [rating setImage:imageG];
     }
     
-    if([movie.favorite boolValue] == NO)
-    {
-        posterImage = [[UIImage alloc] initWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:movie.thumbnail]]];   
-    }
-    else
-    {
-        posterImage = [UIImage imageWithContentsOfFile:movie.thumbnailFile];
-    }
+    posterImage = [UIImage imageWithContentsOfFile:movie.thumbnailFile];
     [poster setImage:posterImage];
 }
 

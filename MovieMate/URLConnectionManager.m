@@ -37,13 +37,7 @@
 - (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error
 {
-    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                      message:[error localizedDescription]
-                                                     delegate:nil
-                                            cancelButtonTitle:@"OK"
-                                            otherButtonTitles:nil];
-    
-    [message show];
+    [delegate urlError:error];
 
 }
 
@@ -53,5 +47,21 @@
     [delegate urlData:responseData];
 }
 
++(BOOL) hostReachable:(NSString*)hostName {
+    Reachability *reachable = [Reachability reachabilityWithHostname:hostName];
+    NetworkStatus netStatus = [reachable currentReachabilityStatus];
+    if (netStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
 
++(BOOL) internetReachable {
+    Reachability *reachable = [Reachability reachabilityForInternetConnection];
+    NetworkStatus internetStatus = [reachable currentReachabilityStatus];
+    if (internetStatus == NotReachable) {
+        return NO;
+    }
+    return YES;
+}
 @end

@@ -23,7 +23,7 @@
 @synthesize detailViewController = _detailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
-@synthesize urlConnectionManager;
+//@synthesize urlConnectionManager;
 @synthesize theRequest;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -33,12 +33,13 @@
         self.title = NSLocalizedString(@"Top Earning Movies", @"Top Earning Movies");
         self.tabBarItem.image = [UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"clapboard" ofType:@"png"]];
         self.tabBarItem.title = @"Top Earners";
-        self.urlConnectionManager = [[URLConnectionManager alloc] init];
-        [self.urlConnectionManager setDelegate:self];
+        //self.urlConnectionManager = [[URLConnectionManager alloc] init];
+        //[self.urlConnectionManager setDelegate:self];
         
         self.theRequest = [NSURLRequest requestWithURL:kRottenTomatoesURL
                                                       cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                   timeoutInterval:60.0];
+        connectionActive = FALSE;
     }
     return self;
 }
@@ -62,6 +63,7 @@
      otherButtonTitles:nil];
      
      [message show];
+    connectionActive = FALSE;
 }
 
 - (void)didReceiveMemoryWarning
@@ -94,6 +96,7 @@
             NSDictionary* movie = [topMovies objectAtIndex:x];
             if([[DatabaseManager sharedDatabaseManager] compareMovieTitle:[movie objectForKey:@"title"]])
             {
+                [context lock];
                 Movie *newMovie = [NSEntityDescription insertNewObjectForEntityForName:@"Movie" 
                                                                 inManagedObjectContext: context];
                 
@@ -160,32 +163,57 @@
                 NSString* myFilePath2 = [NSString stringWithFormat:@"%@/%@",appDir,fileName2];
                 [dataImage2 writeToFile:myFilePath2 atomically:YES];
                 newMovie.profileFile = myFilePath2;
+                [context unlock];
             }
-            [theActivityIndicator stopAnimating];
         }
         
+        [theActivityIndicator stopAnimating];
+        connectionActive = FALSE;
+        [context lock];
         // Save the context.
         NSError *error = nil;
         if (![context save:&error]) {
         }
+        [context unlock];
     });
 }
 
 - (void)refresher
 {
-    [theActivityIndicator startAnimating];
-    
-    if ([URLConnectionManager internetReachable] )
+    if(!connectionActive)
     {
-        if([URLConnectionManager hostReachable:RTHOSTNAME])
+        [theActivityIndicator startAnimating];
+        
+        if ([URLConnectionManager internetReachable] )
         {
-            NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:self.theRequest delegate:urlConnectionManager];
-            if(theConnection == nil)
+            if([URLConnectionManager hostReachable:RTHOSTNAME])
+            {
+                URLConnectionManager* urlConnectionManager = [[URLConnectionManager alloc] init];
+                [urlConnectionManager setDelegate:self];
+                NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:self.theRequest delegate:urlConnectionManager];
+                if(theConnection == nil)
+                {
+                    [theActivityIndicator stopAnimating];
+                    // Inform the user that the connection failed.
+                    UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Connection Error"
+                                                                      message:@"Connection cannot be initialized"
+                                                                     delegate:nil
+                                                            cancelButtonTitle:@"OK"
+                                                            otherButtonTitles:nil];
+                    
+                    [message show];
+                }
+                else
+                {
+                    connectionActive = TRUE;
+                }
+            }
+            else
             {
                 [theActivityIndicator stopAnimating];
                 // Inform the user that the connection failed.
                 UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Connection Error"
-                                                                  message:@"Connection cannot be initialized"
+                                                                  message:@"Host Not Available"
                                                                  delegate:nil
                                                         cancelButtonTitle:@"OK"
                                                         otherButtonTitles:nil];
@@ -198,25 +226,13 @@
             [theActivityIndicator stopAnimating];
             // Inform the user that the connection failed.
             UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Connection Error"
-                                                              message:@"Host Not Available"
+                                                              message:@"No Internet Connection Available"
                                                              delegate:nil
                                                     cancelButtonTitle:@"OK"
                                                     otherButtonTitles:nil];
             
-            [message show];
+            [message show];   
         }
-    }
-    else
-    {
-        [theActivityIndicator stopAnimating];
-        // Inform the user that the connection failed.
-        UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Connection Error"
-                                                          message:@"No Internet Connection Available"
-                                                         delegate:nil
-                                                cancelButtonTitle:@"OK"
-                                                otherButtonTitles:nil];
-        
-        [message show];   
     }
 }
 
@@ -227,8 +243,7 @@
     [super viewDidLoad];
     
 	[self.tableView setRowHeight:ROW_HEIGHT];
-    rowcolorState = FALSE;
-    stopIndicator = 0;
+    //stopIndicator = 0;
     
     UIBarButtonItem *refreshButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refresher)];
     self.navigationItem.rightBarButtonItem = refreshButton;
